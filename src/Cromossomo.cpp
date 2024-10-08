@@ -9,7 +9,7 @@ Cromossomo::Cromossomo(std::vector<int> genes) {
 
 Cromossomo::Cromossomo(size_t quantidadeDeGenes) {
     this->quantidadeDeGenes = quantidadeDeGenes;
-    this->genes = std::vector<int>(quantidadeDeGenes, 0);
+    this->genes = std::vector<int>(quantidadeDeGenes, -1);
 } 
 
 Cromossomo::Cromossomo(std::vector<int> primeiraMetade, std::vector<int> segundaMetade) {

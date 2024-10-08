@@ -73,41 +73,50 @@ Cromossomo* DoubleRomanDomination::heuristic2() {
 	return solution;
 }
 
-/*
+
 Cromossomo* DoubleRomanDomination::heuristic3() {
     Graph* temp = new Graph(*this->graph);
     Cromossomo* solution = new Cromossomo(temp->getOrder());
+    std::vector<size_t> sortedVertices(temp->getOrder());
+    size_t tempOrder = temp->getOrder();
 
-    std::vector<Vertex*> sortedVertices(temp->getVertices());
-    Vertex* choosenVertex = nullptr;
-    int cont = 0;
+    for (size_t i = 0; i < temp->getOrder(); ++i)
+        sortedVertices[i] = i;
 
     std::sort(sortedVertices.begin(), sortedVertices.end(),
-              [&](Vertex* a, Vertex* b) {
-                  return temp->getVertexDegree(a) > temp->getVertexDegree(b);
-              });
+        [&](size_t a, size_t b) {
+            return temp->getVertexDegree(a) > temp->getVertexDegree(b);
+    });
 
-    while (temp->getOrder() > 0) {
-	    choosenVertex = sortedVertices[cont++];
+    size_t choosenVertex = 0;
 
-	    solution->genes[choosenVertex->identificator] = 3;
+    while ((temp->getOrder() > 0) && (choosenVertex < sortedVertices.size())) {
 
-	    for (const auto& it: temp->getAdjacencyList(choosenVertex))
-		    solution->genes[it] = 0;
+        if (choosenVertex >= sortedVertices.size()) break;
 
-	    temp->deleteAdjacencyList(choosenVertex);
+        while (choosenVertex < sortedVertices.size() && 
+               temp->getAdjacencyList(sortedVertices[++choosenVertex]) == std::list<int>{-1});
 
-	    for (size_t i = 0; i < temp->getOrder(); ++i) {
-		    if (temp->getVertexDegree(temp->getVertices()[i]) == 0) {
-		        solution->genes[temp->getVertices()[i]->identificator] = 2;
-		        temp->deleteAdjacencyList(temp->getVertices()[i]);
-		    }
-	    }
+        if (choosenVertex >= sortedVertices.size()) break;
+
+        solution->genes[sortedVertices[choosenVertex]] = 3;
+
+        for (const auto& it : temp->getAdjacencyList(sortedVertices[choosenVertex])) {
+            if (solution->genes[it] == -1)
+                solution->genes[it] = 0;
+        }
+
+    	temp->deleteAdjacencyList(sortedVertices[choosenVertex++]);
+
+        for (size_t i = 0; i < tempOrder; ++i) {
+           if (temp->getAdjacencyList(i).front() != -1) {
+                if (temp->getVertexDegree(i) == 0) {
+                    solution->genes[i] = 2;
+                    temp->deleteVertex(i);
+                }
+            }
+        }
     }
-    
-     //for (const auto& it : solution->genes)
-	//	std::cout << solution->genes[it] << " ";
 
     return solution;
 }
-*/

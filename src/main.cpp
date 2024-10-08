@@ -8,10 +8,13 @@ int main() {
 	std::random_device randomNumber;
 	std::mt19937 seed(randomNumber());
 	std::uniform_int_distribution<int> gap(0, graph->getOrder() - 1);
-
-        DoubleRomanDomination* drd = new DoubleRomanDomination(graph);
-        drd->heuristic1();
-  
+    
+    //std::cout << *graph << std::endl;
+    DoubleRomanDomination* drd = new DoubleRomanDomination(graph);
+    drd->heuristic3();
+    
+   // for (const auto& it: drd->heuristic3()->genes)
+     //   std::cout << it << " ";
 	
 	return 0;
 }

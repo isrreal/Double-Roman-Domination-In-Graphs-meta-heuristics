@@ -143,27 +143,3 @@ void Graph::deleteVertex(size_t vertex) {
     this->size -= this->adjList[vertex].size();
 
 }
-
-
-/*
-void Graph::deleteAdjacencyList(size_t vertex) {
-	
-    if (this->adjList[vertex] == std::list<int>{-1})
-    	return;
-    	
-    for (const auto& it: this->adjList[vertex]) {
-        this->adjList[it].remove(vertex);
-    	deleteVertex(it);
-    }
-    
-    this->size -= adjList[vertex].size();
-    
-    this->adjList[vertex].clear();
-}
-
-void Graph::deleteVertex(size_t vertex) {
-	 this->adjList[vertex] = {-1}; 
-    	--this->order;
-}
-
-*/

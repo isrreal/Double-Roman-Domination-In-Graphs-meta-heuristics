@@ -141,5 +141,4 @@ void Graph::deleteVertex(size_t vertex) {
     this->adjList[vertex] = {-1}; 
     --this->order;
     this->size -= this->adjList[vertex].size();
-
 }

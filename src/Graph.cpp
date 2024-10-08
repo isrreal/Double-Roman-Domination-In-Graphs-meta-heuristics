@@ -115,21 +115,55 @@ void Graph::depthFirstSearch() {
 } 
 */
 
-
-
 void Graph::deleteAdjacencyList(size_t vertex) {
-    for (const auto& it: this->adjList[vertex]) 
+    if ((vertex >= this->adjList.size()) || (this->adjList[vertex] == std::list<int>{-1})) 
+        return;
+
+    std::queue<int> toDelete;
+    toDelete.push(vertex);
+    int currentVertex = -1;
+    
+    for (const auto& it: this->adjList[vertex])
+    	toDelete.push(it);
+
+    while (!toDelete.empty()) {
+        currentVertex = toDelete.front();
+        toDelete.pop();
+
+        for (const auto& it: this->adjList[currentVertex])
+        	this->adjList[it].remove(currentVertex);
+       	deleteVertex(currentVertex);
+    }
+}
+
+void Graph::deleteVertex(size_t vertex) {
+    this->adjList[vertex].clear();
+    this->adjList[vertex] = {-1}; 
+    --this->order;
+    this->size -= this->adjList[vertex].size();
+
+}
+
+
+/*
+void Graph::deleteAdjacencyList(size_t vertex) {
+	
+    if (this->adjList[vertex] == std::list<int>{-1})
+    	return;
+    	
+    for (const auto& it: this->adjList[vertex]) {
         this->adjList[it].remove(vertex);
+    	deleteVertex(it);
+    }
     
     this->size -= adjList[vertex].size();
+    
     this->adjList[vertex].clear();
-
-     deleteVertex(vertex);
 }
 
-
-void Graph::deleteVertex(size_t vertex) { 
-	this->adjList[vertex] = {-1};
-	--this->order;
+void Graph::deleteVertex(size_t vertex) {
+	 this->adjList[vertex] = {-1}; 
+    	--this->order;
 }
 
+*/

@@ -10,28 +10,36 @@ Cromossomo* DoubleRomanDomination::heuristic1() {
 	
 	size_t choosenVertex = -1;
 	
-    	while (temp->getOrder() > 0) {
-	    	choosenVertex = gap(seed) % temp->getOrder();
-	    	while (temp->getAdjacencyList(choosenVertex) == std::list<int>{-1}) {
-		    		choosenVertex = gap(seed) % temp->getOrder();	
-		    		std::cout << choosenVertex << std::endl;
-		}	
-	    	solution->genes[choosenVertex] = 3;
+    while (temp->getOrder() > 0) {
+	    choosenVertex = gap(seed);
+	    while (temp->getAdjacencyList(choosenVertex) == std::list<int>{-1})
+		    choosenVertex = gap(seed);	
+	    solution->genes[choosenVertex] = 3;
 	    	
-		for (const auto& it: temp->getAdjacencyList(choosenVertex)) 
-    		solution->genes[it] = 0;
+	for (const auto& it: temp->getAdjacencyList(choosenVertex)) {
+		if (solution->genes[it] == -1)
+			solution->genes[it] = 0;
+	}
+	
+	for (size_t i = 0; i < solution->genes.size(); ++i)
+    		std::cout << solution->genes[i] << " ";
     		
-		temp->deleteAdjacencyList(choosenVertex);
-	/*    	
-		if (temp->getOrder() == 1) {
-		    solution->genes[choosenVertex] = 3;
-	    		temp->deleteAdjacencyList(choosenVertex);
-	    	}
-	  */  	
-    	}
+    	std::cout << "\n\n";
     	
-	for (const auto& it: solution->genes)
-    		std::cout << it << " ";
+    	temp->deleteAdjacencyList(choosenVertex);
+    	
+    	std::cout << temp->getOrder() << std::endl;
+    	
+	/* if (temp->getOrder() == 1) {
+		 while (temp->getAdjacencyList(choosenVertex) == std::list<int>{-1})
+		    choosenVertex = gap(seed);
+	    solution->genes[choosenVertex] = 3;
+    		temp->deleteAdjacencyList(choosenVertex);
+    	} */ 	
+    }
+    	
+   // 	for (size_t i = 0; i < solution->genes.size(); ++i)
+    //		std::cout << solution->genes[i] << " ";
 
     return solution;    
 }

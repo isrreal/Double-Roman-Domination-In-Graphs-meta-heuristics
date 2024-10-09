@@ -1,8 +1,14 @@
 #include "DoubleRomanDomination.hpp"
 
+void DoubleRomanDomination::criarPopulacao(size_t quantidadeDeCromossomos) {
+    for (size_t i = 0; i < quantidadeDeCromossomos; ++i)        
+        this->populacao.push_back(heuristic3());
+}
+
+
 Cromossomo* DoubleRomanDomination::heuristic1() {
 	Graph* temp = new Graph(*this->graph);
-	Cromossomo* solution = new Cromossomo(temp->getOrder());
+	Cromossomo* solution = new Cromossomo(temp->getOrder(), temp);
 	
 	std::random_device randomNumber;
 	std::mt19937 seed(randomNumber());
@@ -38,7 +44,7 @@ Cromossomo* DoubleRomanDomination::heuristic1() {
 
 Cromossomo* DoubleRomanDomination::heuristic2() {
     Graph* temp = new Graph(*this->graph);
-    Cromossomo* solution = new Cromossomo(temp->getOrder()); 
+    Cromossomo* solution = new Cromossomo(temp->getOrder(), temp); 
     std::random_device randomNumber;
     std::mt19937 seed(randomNumber());
     std::uniform_int_distribution<int> gap(0, temp->getOrder() - 1);
@@ -76,7 +82,7 @@ Cromossomo* DoubleRomanDomination::heuristic2() {
 
 Cromossomo* DoubleRomanDomination::heuristic3() {
     Graph* temp = new Graph(*this->graph);
-    Cromossomo* solution = new Cromossomo(temp->getOrder());
+    Cromossomo* solution = new Cromossomo(temp->getOrder(), temp);
     std::vector<size_t> sortedVertices(temp->getOrder());
     size_t tempOrder = temp->getOrder();
 

@@ -4,7 +4,6 @@
 #include <iostream>
 #include <random>
 #include <vector>
-#include <memory>
 #include "Cromossomo.hpp"
 
 class AlgoritmoGenetico {
@@ -16,13 +15,14 @@ class AlgoritmoGenetico {
 		std::vector<Cromossomo*> populacao;
 		std::vector<std::string> subgrupos;
 		
-		Cromossomo* criarCromossomo(size_t);
-        virtual void criarPopulacao(size_t , size_t);
+	virtual	Cromossomo* criarCromossomo(size_t quantidadeDeGenes);
+        virtual void criarPopulacao(size_t quantidadeDeCromossomos);
         std::vector<std::string> binarioParaDecimal(std::vector<std::string>);
         virtual std::pair<Cromossomo*, int> fitness(Cromossomo*);
 
         Cromossomo* selecionarMelhorIndividuo(Cromossomo*, Cromossomo*);
-        virtual Cromossomo* crossOver(Cromossomo*, Cromossomo*);
+        virtual Cromossomo* crossOver(Cromossomo* pai, Cromossomo* mae);
+        Cromossomo* feasibilityCheck(Cromossomo* cromossomo);
         Cromossomo* mutacao(Cromossomo*);
         std::vector<Cromossomo*> elitismo();
         Cromossomo* obterMelhorIndividuo();
@@ -34,8 +34,8 @@ class AlgoritmoGenetico {
 				       	taxaDeMutacao(taxaDeMutacao), taxaDeElitismo(taxaDeElitismo) {}
 	
 		Cromossomo* rodarAG(size_t);	
-        	std::string binarioParaDecimal(std::string);
-        	std::vector<std::string> leituraDeValores(Cromossomo*, size_t);
+        std::string binarioParaDecimal(std::string);
+        std::vector<std::string> leituraDeValores(Cromossomo*, size_t);
 };	
 
 #endif

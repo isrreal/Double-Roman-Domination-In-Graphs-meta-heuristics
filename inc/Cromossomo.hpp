@@ -4,17 +4,22 @@
 #include <iostream>
 #include <random>
 #include <vector>
+#include "Graph.hpp"
 
 struct Cromossomo {
 	size_t quantidadeDeGenes;
-    std::vector<int> genes;
+        std::vector<int> genes;
+        Graph* graph;
+	// size_t fitnessValue;
+	
+	Cromossomo(std::vector<int> genes, Graph* graph);
 
-	Cromossomo(std::vector<int> genes);
+	Cromossomo(size_t quantidadeDeGenes, Graph* graph);
 
-	Cromossomo(size_t quantidadeDeGenes);
-
-	Cromossomo(std::vector<int> primeiraMetade, std::vector<int> segundaMetade);
-
+	Cromossomo(std::vector<int> primeiraMetade, std::vector<int> segundaMetade, Graph* graph);
+    
+    	Cromossomo(Cromossomo* cromossomo);
+        
 	~Cromossomo();
 };
 

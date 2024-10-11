@@ -10,7 +10,8 @@ struct Cromossomo {
 	size_t quantidadeDeGenes;
         std::vector<int> genes;
         Graph* graph;
-	// size_t fitnessValue;
+        // indice de onde se encontra no vetor de população
+        size_t indexRemove;
 	
 	Cromossomo(std::vector<int> genes, Graph* graph);
 

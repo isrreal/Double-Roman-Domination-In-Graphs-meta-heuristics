@@ -9,12 +9,13 @@ AlgoritmoGenetico::~AlgoritmoGenetico() {
 }
 
 std::vector<Cromossomo*> AlgoritmoGenetico::getPopulacao() { return this->populacao; }
+
 //
 // retorna um novo cromossomo com a quantidade de genes especificada
 //
 
-Cromossomo* AlgoritmoGenetico::criarCromossomo(size_t quantidadeDeGenes) {
-	return new Cromossomo(quantidadeDeGenes, nullptr);
+Cromossomo* AlgoritmoGenetico::criarCromossomo(size_t quantidadeDeGenes, Graph* graph) {
+	return new Cromossomo(quantidadeDeGenes, graph);
 }
 
 //
@@ -24,13 +25,17 @@ Cromossomo* AlgoritmoGenetico::criarCromossomo(size_t quantidadeDeGenes) {
 void AlgoritmoGenetico::criarPopulacao(Cromossomo*(*heuristic)(Graph*), Graph* graph) {
     if (heuristic) {  
        Cromossomo* func = (*heuristic)(graph);  
-       for (size_t i = 0; i < tamanhoDaPopulacao; ++i)
+       for (size_t i = 0; i < tamanhoDaPopulacao; ++i) {
             this->populacao[i] = new Cromossomo(func);
+            this->populacao[i]->indexRemove = i;
+       }
    } 
         
    else {
-       for (size_t i = 0; i < tamanhoDaPopulacao; ++i)
-           this->populacao[i] = criarCromossomo(quantidadeDeGenes);  
+       for (size_t i = 0; i < tamanhoDaPopulacao; ++i) {
+           this->populacao[i] = criarCromossomo(quantidadeDeGenes, nullptr); 
+           this->populacao[i]->indexRemove = i;
+       }
    }
 }
 
@@ -111,6 +116,8 @@ Cromossomo* AlgoritmoGenetico::tournamentSelection(std::vector<Cromossomo*> popu
 	return melhorIndividuo.first;
 }
 
+// @brief seleciona aleatoriamente algum cromossomo da população e o retorna 
+
 Cromossomo* AlgoritmoGenetico::rouletteWheelSelection(std::vector<Cromossomo*> populacao) {
     std::random_device randomNumber;                                
     std::mt19937 seed(randomNumber()); 
@@ -119,8 +126,30 @@ Cromossomo* AlgoritmoGenetico::rouletteWheelSelection(std::vector<Cromossomo*> p
     return populacao[gap(seed)];
 }
 
-Cromossomo* AlgoritmoGenetico::selectionMethod(Cromossomo*(*selectionHeuristic)(std::vector<Cromossomo*> populacao), std::vector<Cromossomo*> populacao) {
-    return (selectionHeuristic) ? (*selectionHeuristic)(populacao) : nullptr; 
+/**
+ * @brief Seleciona um cromossomo da população utilizando uma heurística de seleção específica e o remove da população.
+ * 
+ * Esta função utiliza uma heurística de seleção passada como argumento para escolher o melhor cromossomo da população.
+ * Após a seleção, o cromossomo é removido da população original para evitar duplicações em futuras seleções.
+ * 
+ * @param selectionHeuristic Ponteiro para uma função que implementa a heurística de seleção, 
+ *                           a qual deve receber um vetor de cromossomos e retornar o cromossomo selecionado.
+ * @return Cromossomo* O cromossomo selecionado e removido da população, ou nullptr se não houver seleção válida.
+ */
+
+Cromossomo* AlgoritmoGenetico::selectionMethod(Cromossomo* (*selectionHeuristic)(std::vector<Cromossomo*>)) {
+    if (!selectionHeuristic) 
+        return nullptr; 
+  
+    Cromossomo* selected = (*selectionHeuristic)(this->populacao);
+    
+    if (!selected) 
+        return nullptr; 
+    
+    if (selected->indexRemove >= 0 && selected->indexRemove < this->populacao.size()) 
+    	this->populacao.erase(this->populacao.begin() + selected->indexRemove);
+
+    return selected; 
 }
 
 
@@ -130,7 +159,6 @@ Cromossomo* AlgoritmoGenetico::selectionMethod(Cromossomo*(*selectionHeuristic)(
 Cromossomo* AlgoritmoGenetico::selecionarMelhorIndividuo(Cromossomo* cromossomo1, Cromossomo* cromossomo2) {
 	    return (this->fitness(cromossomo1).second > this->fitness(cromossomo2).second ? cromossomo1 : cromossomo2);
 }
-
 
 
 //
@@ -241,35 +269,15 @@ std::vector<Cromossomo*> AlgoritmoGenetico::elitismo() {
 std::vector<Cromossomo*> AlgoritmoGenetico::gerarNovaPopulacao() {
     std::vector<Cromossomo*> novaPopulacao = this->populacao;
 
-    std::random_device randomNumber;
-    std::mt19937 seed(randomNumber());
-    std::uniform_int_distribution<int> gap(0, this->populacao.size() - 1);
-    size_t randomPosition1, randomPosition2 = 0;
-
-    auto gerarDoisIndicesDistintos = [&](size_t& numero1, size_t& numero2) {
-        numero1 = gap(seed);
-        while (numero1 == numero2)
-        	numero2 = gap(seed);
-    };
-
     Cromossomo* selecionado1 = nullptr;
     Cromossomo* selecionado2 = nullptr;
-    Cromossomo* individuoMaisApto1 = nullptr;
-    Cromossomo* individuoMaisApto2 = nullptr;
     Cromossomo* novoIndividuo = nullptr;
 
     while (novaPopulacao.size() < this->populacao.size()) {
-        gerarDoisIndicesDistintos(randomPosition1, randomPosition2);
-        selecionado1 = this->populacao[randomPosition1];
-        selecionado2 = this->populacao[randomPosition2];
-        individuoMaisApto1 = this->selecionarMelhorIndividuo(selecionado1, selecionado2);
-
-        gerarDoisIndicesDistintos(randomPosition1, randomPosition2);
-        selecionado1 = this->populacao[randomPosition1];
-        selecionado2 = this->populacao[randomPosition2];
-        individuoMaisApto2 = this->selecionarMelhorIndividuo(selecionado1, selecionado2);
-
-        novoIndividuo = this->crossOver(individuoMaisApto1, individuoMaisApto2, nullptr);
+        selecionado1 = this->selectionMethod(AlgoritmoGenetico::tournamentSelection);
+        selecionado2 = this->selectionMethod(AlgoritmoGenetico::rouletteWheelSelection);
+       
+        novoIndividuo = this->crossOver(selecionado1, selecionado2, nullptr);
 
         novaPopulacao.push_back(novoIndividuo);
     }
@@ -277,7 +285,7 @@ std::vector<Cromossomo*> AlgoritmoGenetico::gerarNovaPopulacao() {
     return novaPopulacao;
 }
 
-// 
+// @brief
 // A função aplica o algoritmo genético, simulando mutações e elitismo, utilizando uma quantidade específica de gerações
 // retorna o melhor indivíduo dentre as gerações
 //
@@ -285,12 +293,13 @@ std::vector<Cromossomo*> AlgoritmoGenetico::gerarNovaPopulacao() {
 Cromossomo* AlgoritmoGenetico::rodarAG(size_t quantidadeDeGeracoes,
         Cromossomo*(*selectionHeuristic)(std::vector<Cromossomo*>),
         Cromossomo*(*heuristic)(Graph*), Graph* graph) {
+        
    this->criarPopulacao(heuristic, graph);
 
    Cromossomo* melhorIndividuo = nullptr;
    
    for (size_t i = 0; i < quantidadeDeGeracoes; ++i) {                                                 
-       melhorIndividuo = this->selectionMethod(selectionHeuristic, this->populacao);
+       melhorIndividuo = this->selectionMethod(selectionHeuristic);
        this->populacao = this->gerarNovaPopulacao();	
    }
    return melhorIndividuo;

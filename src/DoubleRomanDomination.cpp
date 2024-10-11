@@ -14,7 +14,7 @@ Graph* DoubleRomanDomination::getGraph() {
 
 size_t DoubleRomanDomination::getGamma2R() {
     size_t summation = 0;
-    Cromossomo* temp = this->geneticAlgorithm->rodarAG(100, DoubleRomanDomination::heuristic1, this->graph);
+    Cromossomo* temp = this->geneticAlgorithm->rodarAG(quantidadeDeGeracoes, DoubleRomanDomination::heuristic1, this->graph);
 
     std::for_each(temp->genes.begin(), temp->genes.end(), [&summation](int element) {
         summation += element;

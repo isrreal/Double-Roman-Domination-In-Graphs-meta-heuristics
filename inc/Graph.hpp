@@ -29,6 +29,8 @@ public:
     size_t getOrder();
     size_t getVertexDegree(size_t vertex);
     
+    std::unordered_map<size_t, std::list<size_t>> Graph::getAdjacencyList();
+    
     std::list<size_t> getAdjacencyList(size_t vertex);
     
     bool edgeExists(size_t u, size_t v);	

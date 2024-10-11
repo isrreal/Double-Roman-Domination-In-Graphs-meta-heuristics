@@ -18,14 +18,13 @@ class AlgoritmoGenetico {
 	    Cromossomo* criarCromossomo(size_t quantidadeDeGenes);
         void criarPopulacao(Cromossomo*(*heuristic)(Graph*), Graph* graph);
         std::vector<std::string> binarioParaDecimal(std::vector<std::string>);
-        std::pair<Cromossomo*, int> fitness(Cromossomo*);
+        Cromossomo* selectionMethod(Cromossomo*(*selectionHeuristic)(std::vector<Cromossomo*>), std::vector<Cromossomo*> populacao);
+        Cromossomo* selecionarMelhorIndividuo(Cromossomo* cromossomo1, Cromossomo* cromossomo2);
 
-        Cromossomo* selecionarMelhorIndividuo(Cromossomo*, Cromossomo*);
         Cromossomo* crossOver(Cromossomo* pai, Cromossomo* mae, Cromossomo*(*crossOverHeuristic)(Cromossomo*, Cromossomo*)); 
         Cromossomo* feasibilityCheck(Cromossomo* cromossomo);
         Cromossomo* mutacao(Cromossomo*);
         std::vector<Cromossomo*> elitismo();
-        Cromossomo* obterMelhorIndividuo();
         std::vector<Cromossomo*> gerarNovaPopulacao();
 	public:
 		AlgoritmoGenetico(size_t tamanhoDaPopulacao, size_t quantidadeDeGenes,
@@ -34,8 +33,14 @@ class AlgoritmoGenetico {
 				       	taxaDeMutacao(taxaDeMutacao), taxaDeElitismo(taxaDeElitismo),
                         populacao(tamanhoDaPopulacao, nullptr) {}
         ~AlgoritmoGenetico();
-      
-		Cromossomo* rodarAG(size_t quantidadeDeGeracoes, Cromossomo*(*heuristic)(Graph*), Graph* graph);
+        std::vector<Cromossomo*> getPopulacao();      
+		Cromossomo* rodarAG(size_t quantidadeDeGeracoes, 
+                Cromossomo*(*selectionMethod)(std::vector<Cromossomo*>),
+                Cromossomo*(*heuristic)(Graph*), Graph* graph);
+       
+        static std::pair<Cromossomo*, int> fitness(Cromossomo*);
+        static Cromossomo* tournamentSelection(std::vector<Cromossomo*> populacao);
+        static Cromossomo* rouletteWheelSelection(std::vector<Cromossomo*> populacao);                                                                                                     
         std::string binarioParaDecimal(std::string);
         std::vector<std::string> leituraDeValores(Cromossomo*, size_t);
 };	

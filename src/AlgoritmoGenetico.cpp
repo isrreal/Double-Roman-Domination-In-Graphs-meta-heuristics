@@ -8,7 +8,7 @@ AlgoritmoGenetico::~AlgoritmoGenetico() {
     populacao.clear();
 }
 
-
+std::vector<Cromossomo*> AlgoritmoGenetico::getPopulacao() { return this->populacao; }
 //
 // retorna um novo cromossomo com a quantidade de genes especificada
 //
@@ -90,12 +90,48 @@ std::pair<Cromossomo*, int> AlgoritmoGenetico::fitness(Cromossomo* cromossomo) {
 	return {cromossomo, fitnessValue};
 }
 
+//
+// A função escolhe aleatoriamente os cromossomos da população inicial e testa a aptidão de cada um 
+// retorna o cromossomo geneticamente superior 
+//
+
+Cromossomo* AlgoritmoGenetico::tournamentSelection(std::vector<Cromossomo*> populacao) {
+	std::random_device randomNumber;
+	std::mt19937 seed(randomNumber());
+	std::uniform_int_distribution<int> gap(0, populacao.size() - 1);
+	std::pair<Cromossomo*, int> melhorIndividuo = fitness(populacao[gap(seed)]);
+	std::pair<Cromossomo*, int> individuo;
+	
+	for (size_t i = 0; i < populacao.size(); ++i) {
+		individuo = fitness(populacao[i]);
+		if (individuo.second > melhorIndividuo.second)
+			melhorIndividuo = individuo;
+	}
+	
+	return melhorIndividuo.first;
+}
+
+Cromossomo* AlgoritmoGenetico::rouletteWheelSelection(std::vector<Cromossomo*> populacao) {
+    std::random_device randomNumber;                                
+    std::mt19937 seed(randomNumber()); 
+    std::uniform_int_distribution<> gap(0, populacao.size() - 1);
+    
+    return populacao[gap(seed)];
+}
+
+Cromossomo* AlgoritmoGenetico::selectionMethod(Cromossomo*(*selectionHeuristic)(std::vector<Cromossomo*> populacao), std::vector<Cromossomo*> populacao) {
+    return (selectionHeuristic) ? (*selectionHeuristic)(populacao) : nullptr; 
+}
+
+
 // a função recebe dois cromossomos e seleciona, dentro os dois, o que possui melhor genética
 // retorna o cromossomo com mais aptidão dentre os comparados
 
 Cromossomo* AlgoritmoGenetico::selecionarMelhorIndividuo(Cromossomo* cromossomo1, Cromossomo* cromossomo2) {
-	return (this->fitness(cromossomo1).second > this->fitness(cromossomo2).second ? cromossomo1 : cromossomo2);
+	    return (this->fitness(cromossomo1).second > this->fitness(cromossomo2).second ? cromossomo1 : cromossomo2);
 }
+
+
 
 //
 // a função realiza o cross over completo de dois cromossomos, e cria um cromossomo filho, contendo genes dos cromossomos pais 
@@ -188,7 +224,7 @@ Cromossomo* AlgoritmoGenetico::mutacao(Cromossomo* cromossomo) {
  
 std::vector<Cromossomo*> AlgoritmoGenetico::elitismo() {
 	std::vector<Cromossomo*> novaPopulacao;
-	Cromossomo* melhorIndividuo = this->obterMelhorIndividuo();
+	Cromossomo* melhorIndividuo = AlgoritmoGenetico::tournamentSelection(this->populacao);
 	size_t numeroDeRepeticoes = this->populacao.size() * this->taxaDeElitismo;
 
 	for (size_t i = 0; i < numeroDeRepeticoes; ++i)
@@ -198,33 +234,12 @@ std::vector<Cromossomo*> AlgoritmoGenetico::elitismo() {
 }
 
 //
-// A função escolhe aleatoriamente os cromossomos da população inicial e testa a aptidão de cada um 
-// retorna o cromossomo geneticamente superior 
-//
-
-Cromossomo* AlgoritmoGenetico::obterMelhorIndividuo() {
-	std::random_device randomNumber;
-	std::mt19937 seed(randomNumber());
-	std::uniform_int_distribution<int> gap(0, this->populacao.size() - 1);
-	std::pair<Cromossomo*, int> melhorIndividuo = this->fitness(this->populacao[gap(seed)]);
-	std::pair<Cromossomo*, int> individuo;
-	
-	for (size_t i = 0; i < this->populacao.size(); ++i) {
-		individuo = this->fitness(this->populacao[i]);
-		if (individuo.second > melhorIndividuo.second)
-			melhorIndividuo = individuo;
-	}
-	
-	return melhorIndividuo.first;
-}
-
-//
 // A função simula a reprodução de uma nova população geneticamente superior, sujeitas a mutações e elitismo, usando a população inicial
 // retorna uma nova população geneticamente superior
 //
 
 std::vector<Cromossomo*> AlgoritmoGenetico::gerarNovaPopulacao() {
-    std::vector<Cromossomo*> novaPopulacao = this->elitismo();
+    std::vector<Cromossomo*> novaPopulacao = this->populacao;
 
     std::random_device randomNumber;
     std::mt19937 seed(randomNumber());
@@ -267,17 +282,16 @@ std::vector<Cromossomo*> AlgoritmoGenetico::gerarNovaPopulacao() {
 // retorna o melhor indivíduo dentre as gerações
 //
 
-Cromossomo* AlgoritmoGenetico::rodarAG(size_t quantidadeDeGeracoes, Cromossomo*(*heuristic)(Graph*), Graph* graph) {
+Cromossomo* AlgoritmoGenetico::rodarAG(size_t quantidadeDeGeracoes,
+        Cromossomo*(*selectionHeuristic)(std::vector<Cromossomo*>),
+        Cromossomo*(*heuristic)(Graph*), Graph* graph) {
    this->criarPopulacao(heuristic, graph);
 
    Cromossomo* melhorIndividuo = nullptr;
-
+   
    for (size_t i = 0; i < quantidadeDeGeracoes; ++i) {                                                 
-       melhorIndividuo = this->obterMelhorIndividuo();
+       melhorIndividuo = this->selectionMethod(selectionHeuristic, this->populacao);
        this->populacao = this->gerarNovaPopulacao();	
    }
-
-    return melhorIndividuo;
+   return melhorIndividuo;
 }
-
-

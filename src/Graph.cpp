@@ -69,6 +69,8 @@ std::unordered_map<size_t, std::list<size_t>> Graph::getAdjacencyList() { return
 
 std::list<size_t> Graph::getAdjacencyList(size_t vertex) { return this->adjList[vertex]; }
 
+bool Graph::vertexExists(size_t vertex) { return adjList.find(vertex) != adjList.end(); }
+
 /*
 void Graph::breadthFirstSearch() {
     std::vector<bool> visited(this->order, false);
@@ -135,8 +137,6 @@ void Graph::deleteAdjacencyList(size_t vertex) {
 }
 
 void Graph::deleteVertex(size_t vertex) {
-    if (adjList.find(vertex) == adjList.end())
-    	return;
     this->size -= this->adjList[vertex].size();
     this->adjList.erase(vertex);
     --this->order;

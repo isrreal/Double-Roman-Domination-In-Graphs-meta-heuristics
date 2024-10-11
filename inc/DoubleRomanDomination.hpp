@@ -14,11 +14,12 @@ class DoubleRomanDomination {
         AlgoritmoGenetico* geneticAlgorithm;
 		size_t gamma2r;	
 		void fiabilityCheck();
+        size_t quantidadeDeGeracoes;
 	public:
-	DoubleRomanDomination(Graph* graph, size_t tamanhoDaPopulacao, size_t quantidadeDeGenes,
+	DoubleRomanDomination(Graph* graph, size_t quantidadeDeGeracoes, size_t tamanhoDaPopulacao, size_t quantidadeDeGenes,
                       float taxaDeMutacao, float taxaDeElitismo) 
     : geneticAlgorithm(new AlgoritmoGenetico(tamanhoDaPopulacao, quantidadeDeGenes, taxaDeMutacao, taxaDeElitismo)),
-      graph(graph), gamma2r(0) {}
+      graph(graph), gamma2r(0), quantidadeDeGeracoes(quantidadeDeGeracoes) {}
 
         ~DoubleRomanDomination();
         Graph* getGraph();

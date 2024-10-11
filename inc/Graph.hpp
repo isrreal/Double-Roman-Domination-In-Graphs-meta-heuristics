@@ -2,11 +2,10 @@
 #define GRAPH_HPP
 
 #include <iostream>
-#include <stack>
 #include <random>
 #include <algorithm>
-#include <vector>
 #include <list>
+#include <unordered_map>
 #include <queue>
 
 class Graph {
@@ -15,11 +14,10 @@ private:
     size_t size;
     bool isDirected;
     
-    std::vector<std::list<int>> adjList;
+    std::unordered_map<size_t, std::list<size_t>> adjList;
 
-    void addEdge(int source, int destination);
-   // void configureEdges(std::vector<std::pair<int, int>> edges);
-
+    void addEdge(size_t source, size_t destination);
+    
 public:	
 
     Graph(size_t order, bool isDirected, float probabilityOfEdge);	
@@ -31,7 +29,7 @@ public:
     size_t getOrder();
     size_t getVertexDegree(size_t vertex);
     
-    std::list<int> getAdjacencyList(size_t vertex);
+    std::list<size_t> getAdjacencyList(size_t vertex);
     
     bool edgeExists(size_t u, size_t v);	
 

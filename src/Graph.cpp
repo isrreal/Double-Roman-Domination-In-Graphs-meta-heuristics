@@ -137,9 +137,6 @@ void Graph::deleteVertex(size_t vertex) {
     this->size -= this->adjList[vertex].size();
 }
 
-
-
-
 std::ostream& operator<< (std::ostream& os, const Graph& graph) {
     for (size_t i = 0; i < graph.adjList.size(); ++i) {
  	    std::cout << i << " ----> ";

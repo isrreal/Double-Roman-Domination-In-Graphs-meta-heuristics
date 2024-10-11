@@ -32,21 +32,23 @@ Cromossomo* DoubleRomanDomination::heuristic1(Graph* graph) {
                              
     while (graph->getOrder() > 0) {
 	    choosenVertex = gap(seed);
+	    while (!graph->vertexExists(choosenVertex))
+	   	choosenVertex = gap(seed);
+	    	    
 	    solution->genes[choosenVertex] = 3;
-	    	
 	    for (const auto& it: graph->getAdjacencyList(choosenVertex)) {
-		    if (solution->genes[it] == -1)
-			    solution->genes[it] = 0;
-	    }
+		if (solution->genes[it] == -1)
+		    solution->genes[it] = 0;
+	    }	
         
    	    graph->deleteAdjacencyList(choosenVertex);
     	
 	    if (graph->getOrder() == 1) {
+	    	choosenVertex = graph->getAdjacencyList().begin()->first;
 	        solution->genes[choosenVertex] = 3;
-            graph->deleteAdjacencyList(choosenVertex);
-        }
+                graph->deleteVertex(choosenVertex);
+            }
    }  
-    //std::cout << graph->getOrder() << std::endl;	
     return solution;    
 }
 

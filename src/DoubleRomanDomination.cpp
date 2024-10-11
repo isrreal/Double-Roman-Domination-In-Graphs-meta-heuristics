@@ -24,34 +24,29 @@ size_t DoubleRomanDomination::getGamma2R() {
 
 Cromossomo* DoubleRomanDomination::heuristic1(Graph* graph) {
 	Cromossomo* solution = new Cromossomo(graph->getOrder(), graph);
-	
 	std::random_device randomNumber;
 	std::mt19937 seed(randomNumber());
 	std::uniform_int_distribution<int> gap(0, graph->getOrder() - 1);
 	
-	size_t choosenVertex = -1;
+	size_t choosenVertex = 0;
                              
     while (graph->getOrder() > 0) {
 	    choosenVertex = gap(seed);
-	    while (graph->getAdjacencyList(choosenVertex) == std::list<int>{-1})
-		    choosenVertex = gap(seed);	
 	    solution->genes[choosenVertex] = 3;
 	    	
 	    for (const auto& it: graph->getAdjacencyList(choosenVertex)) {
 		    if (solution->genes[it] == -1)
 			    solution->genes[it] = 0;
 	    }
-	
+        
    	    graph->deleteAdjacencyList(choosenVertex);
     	
 	    if (graph->getOrder() == 1) {
-		    while (graph->getAdjacencyList(choosenVertex) == std::list<int>{-1})
-		        choosenVertex = gap(seed);
 	        solution->genes[choosenVertex] = 3;
             graph->deleteAdjacencyList(choosenVertex);
         }
    }  
-    	
+    //std::cout << graph->getOrder() << std::endl;	
     return solution;    
 }
 
@@ -68,9 +63,9 @@ Cromossomo* DoubleRomanDomination::heuristic2(Graph* graph) {
 
     while (graph->getOrder() > 0) {
         choosenVertex = gap(seed);
-        while (graph->getAdjacencyList(choosenVertex) == std::list<int>{-1})
-            choosenVertex = gap(seed);
-
+//        while (graph->getAdjacencyList(choosenVertex) == std::list<int>{-1})
+//            choosenVertex = gap(seed);
+//
     	solution->genes[choosenVertex] = 3;
  
         for (const auto& it: graph->getAdjacencyList(choosenVertex)) {
@@ -113,11 +108,11 @@ Cromossomo* DoubleRomanDomination::heuristic3(Graph* graph) {
 
         if (choosenVertex >= sortedVertices.size()) break;
 
-        while (choosenVertex < sortedVertices.size() && 
-               graph->getAdjacencyList(sortedVertices[choosenVertex]) == std::list<int>{-1}) {
-               	choosenVertex++;
-               }
-
+//        while (choosenVertex < sortedVertices.size() && 
+//               graph->getAdjacencyList(sortedVertices[choosenVertex]) == std::list<int>{-1}) {
+//               	choosenVertex++;
+//               }
+//
         if (choosenVertex >= sortedVertices.size()) break;
 
         solution->genes[sortedVertices[choosenVertex]] = 3;

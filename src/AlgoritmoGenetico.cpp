@@ -6,7 +6,6 @@ AlgoritmoGenetico::~AlgoritmoGenetico() {
     for (size_t i = tamanhoDaPopulacao; i > 0; --i)
         delete populacao[i];
     populacao.clear();
-    std::cout << "apagado como sucesso!" << std::endl;
 }
 
 
@@ -23,7 +22,7 @@ Cromossomo* AlgoritmoGenetico::criarCromossomo(size_t quantidadeDeGenes) {
 //
 
 void AlgoritmoGenetico::criarPopulacao(Cromossomo*(*heuristic)(Graph*), Graph* graph) {
-    if (heuristic != nullptr) {  
+    if (heuristic) {  
        Cromossomo* func = (*heuristic)(graph);  
        for (size_t i = 0; i < tamanhoDaPopulacao; ++i)
             this->populacao[i] = new Cromossomo(func);
@@ -105,7 +104,7 @@ Cromossomo* AlgoritmoGenetico::selecionarMelhorIndividuo(Cromossomo* cromossomo1
 
 
 Cromossomo* AlgoritmoGenetico::crossOver(Cromossomo* pai, Cromossomo* mae, Cromossomo*(*crossOverHeuristic)(Cromossomo*, Cromossomo*)) {
-    if (crossOverHeuristic != nullptr)
+    if (crossOverHeuristic)
         return (*crossOverHeuristic)(pai, mae);
      
    std::random_device randomNumber;

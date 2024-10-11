@@ -65,6 +65,8 @@ size_t Graph::getSize() { return this->size; }
 
 size_t Graph::getOrder() { return this->order; }
 
+std::unordered_map<size_t, std::list<size_t>> Graph::getAdjacencyList() { return this->adjList; }
+
 std::list<size_t> Graph::getAdjacencyList(size_t vertex) { return this->adjList[vertex]; }
 
 /*

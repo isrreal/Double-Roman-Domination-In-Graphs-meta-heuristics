@@ -29,11 +29,13 @@ public:
     size_t getOrder();
     size_t getVertexDegree(size_t vertex);
     
-    std::unordered_map<size_t, std::list<size_t>> Graph::getAdjacencyList();
+    std::unordered_map<size_t, std::list<size_t>> getAdjacencyList();
     
     std::list<size_t> getAdjacencyList(size_t vertex);
     
-    bool edgeExists(size_t u, size_t v);	
+    bool edgeExists(size_t u, size_t v);
+    
+    bool vertexExists(size_t vertex);	
 
     void breadthFirstSearch();  
     

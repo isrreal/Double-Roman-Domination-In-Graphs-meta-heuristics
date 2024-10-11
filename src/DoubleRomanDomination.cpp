@@ -1,4 +1,5 @@
 #include "DoubleRomanDomination.hpp"
+
 DoubleRomanDomination::~DoubleRomanDomination() {
     delete this->geneticAlgorithm;
     delete this->graph;
@@ -33,12 +34,12 @@ Cromossomo* DoubleRomanDomination::heuristic1(Graph* graph) {
     while (graph->getOrder() > 0) {
 	    choosenVertex = gap(seed);
 	    while (!graph->vertexExists(choosenVertex))
-	   	choosenVertex = gap(seed);
+	   	    choosenVertex = gap(seed);
 	    	    
 	    solution->genes[choosenVertex] = 3;
 	    for (const auto& it: graph->getAdjacencyList(choosenVertex)) {
-		if (solution->genes[it] == -1)
-		    solution->genes[it] = 0;
+		    if (solution->genes[it] == -1)
+		        solution->genes[it] = 0;
 	    }	
         
    	    graph->deleteAdjacencyList(choosenVertex);
@@ -47,7 +48,7 @@ Cromossomo* DoubleRomanDomination::heuristic1(Graph* graph) {
 	    	choosenVertex = graph->getAdjacencyList().begin()->first;
 	        solution->genes[choosenVertex] = 3;
                 graph->deleteVertex(choosenVertex);
-            }
+        }
    }  
     return solution;    
 }
@@ -65,11 +66,10 @@ Cromossomo* DoubleRomanDomination::heuristic2(Graph* graph) {
 
     while (graph->getOrder() > 0) {
         choosenVertex = gap(seed);
-//        while (graph->getAdjacencyList(choosenVertex) == std::list<int>{-1})
-//            choosenVertex = gap(seed);
-//
-    	solution->genes[choosenVertex] = 3;
- 
+        while (!graph->vertexExists(choosenVertex))
+    	    choosenVertex = gap(seed);
+
+        solution->genes[choosenVertex] = 3; 
         for (const auto& it: graph->getAdjacencyList(choosenVertex)) {
             if (solution->genes[it] == -1)
                 solution->genes[it] = 0;
@@ -78,7 +78,7 @@ Cromossomo* DoubleRomanDomination::heuristic2(Graph* graph) {
         graph->deleteAdjacencyList(choosenVertex);
 
         for (size_t i = 0; i < graphOrder; ++i) {
-           if (graph->getAdjacencyList(i).front() != -1) {
+           if (graph->vertexExists(i)) {
                 if (graph->getVertexDegree(i) == 0) {
                     solution->genes[i] = 2;
                     graph->deleteVertex(i);
@@ -110,15 +110,15 @@ Cromossomo* DoubleRomanDomination::heuristic3(Graph* graph) {
 
         if (choosenVertex >= sortedVertices.size()) break;
 
-//        while (choosenVertex < sortedVertices.size() && 
-//               graph->getAdjacencyList(sortedVertices[choosenVertex]) == std::list<int>{-1}) {
-//               	choosenVertex++;
-//               }
-//
+        while (choosenVertex < sortedVertices.size() && 
+                (!graph->vertexExists(sortedVertices[choosenVertex]))) {
+               ++choosenVertex;
+        }
+
         if (choosenVertex >= sortedVertices.size()) break;
 
         solution->genes[sortedVertices[choosenVertex]] = 3;
-
+        
         for (const auto& it : graph->getAdjacencyList(sortedVertices[choosenVertex])) {
             if (solution->genes[it] == -1)
                 solution->genes[it] = 0;
@@ -127,17 +127,14 @@ Cromossomo* DoubleRomanDomination::heuristic3(Graph* graph) {
     	graph->deleteAdjacencyList(sortedVertices[choosenVertex++]);
 
         for (size_t i = 0; i < graphOrder; ++i) {
-           if (graph->getAdjacencyList(i).front() != -1) {
+           if (graph->vertexExists(i)) {
                 if (graph->getVertexDegree(i) == 0) {
                     solution->genes[i] = 2;
                     graph->deleteVertex(i);
-                 //   std::cout << *graph << std::endl;
                 }
             }
         }
     }
-    
-  //  std::cout << *graph << std::endl;
 
     return solution;
 }

@@ -1,5 +1,15 @@
 #include "AlgoritmoGenetico.hpp"
 
+
+// Destrutor
+AlgoritmoGenetico::~AlgoritmoGenetico() {
+    for (size_t i = tamanhoDaPopulacao; i > 0; --i)
+        delete populacao[i];
+    populacao.clear();
+    std::cout << "apagado como sucesso!" << std::endl;
+}
+
+
 //
 // retorna um novo cromossomo com a quantidade de genes especificada
 //
@@ -12,9 +22,17 @@ Cromossomo* AlgoritmoGenetico::criarCromossomo(size_t quantidadeDeGenes) {
 // A função cria uma população com cromossomos com uma quantidade específica de genes
 //
 
-void AlgoritmoGenetico::criarPopulacao(size_t quantidadeDeCromossomos) {
-	for (size_t i = 0; i < quantidadeDeCromossomos; ++i)
-		this->populacao.push_back(this->criarCromossomo(this->quantidadeDeGenes));
+void AlgoritmoGenetico::criarPopulacao(Cromossomo*(*heuristic)(Graph*), Graph* graph) {
+    if (heuristic != nullptr) {  
+       Cromossomo* func = (*heuristic)(graph);  
+       for (size_t i = 0; i < tamanhoDaPopulacao; ++i)
+            this->populacao[i] = new Cromossomo(func);
+   } 
+        
+   else {
+       for (size_t i = 0; i < tamanhoDaPopulacao; ++i)
+           this->populacao[i] = criarCromossomo(quantidadeDeGenes);  
+   }
 }
 
 // 
@@ -86,41 +104,43 @@ Cromossomo* AlgoritmoGenetico::selecionarMelhorIndividuo(Cromossomo* cromossomo1
 //
 
 
-Cromossomo* AlgoritmoGenetico::crossOver(Cromossomo* pai, Cromossomo* mae) {
-    std::random_device randomNumber;
-    std::mt19937 seed(randomNumber()); 
-    std::uniform_int_distribution<> gap(0, quantidadeDeGenes);
-    size_t range1 = gap(seed);
-    size_t range2 = gap(seed);
-    
-    std::vector<int> x, y;
-    while ((range1 == range2) || ((range2 - range1) == 1)) {
-    	range1 = gap(seed);
-    	range2 = gap(seed);
-    }
-
-    if (range1 > range2) 
-    	std::swap(range1, range2);
-
-   // std::cout << "Range1: " << range1 << ", Range2: " << range2 << std::endl;
-
-    for (size_t i = range1; i <= range2; ++i) { 
-    	x.push_back(pai->genes[i]);
-	y.push_back(mae->genes[i]);
-    }
-
-    for (size_t i = range1, j = 0; i <= range2; ++i, ++j) {  
-    	pai->genes[i] = y[j];
-	mae->genes[i] = x[j]; 
-    }
-  
-     Cromossomo* s1 = new Cromossomo(pai);
-     Cromossomo* s2 = new Cromossomo(mae);
-
-     feasibilityCheck(s1);
-     feasibilityCheck(s2);
+Cromossomo* AlgoritmoGenetico::crossOver(Cromossomo* pai, Cromossomo* mae, Cromossomo*(*crossOverHeuristic)(Cromossomo*, Cromossomo*)) {
+    if (crossOverHeuristic != nullptr)
+        return (*crossOverHeuristic)(pai, mae);
      
-     return selecionarMelhorIndividuo(s1, s2);
+   std::random_device randomNumber;
+   std::mt19937 seed(randomNumber()); 
+   std::uniform_int_distribution<> gap(0, quantidadeDeGenes - 1);
+   size_t range1 = gap(seed);
+   size_t range2 = gap(seed);
+   
+   std::vector<int> x, y;
+
+   while ((range1 == range2) || ((range2 - range1) == 1)) {
+        range1 = gap(seed);
+        range2 = gap(seed);
+   }
+
+   if (range1 > range2) 
+        std::swap(range1, range2);
+    
+   for (size_t i = range1; i <= range2; ++i) { 
+        x.push_back(pai->genes[i]);
+        y.push_back(mae->genes[i]);
+   }
+
+   for (size_t i = range1, j = 0; i <= range2; ++i, ++j) {  
+       pai->genes[i] = y[j];
+       mae->genes[i] = x[j]; 
+  }
+ 
+   Cromossomo* s1 = new Cromossomo(pai);
+   Cromossomo* s2 = new Cromossomo(mae);
+
+   feasibilityCheck(s1);
+   feasibilityCheck(s2);
+    
+   return selecionarMelhorIndividuo(s1, s2);
 }
 
 Cromossomo* AlgoritmoGenetico::feasibilityCheck(Cromossomo* cromossomo) {	
@@ -205,39 +225,42 @@ Cromossomo* AlgoritmoGenetico::obterMelhorIndividuo() {
 //
 
 std::vector<Cromossomo*> AlgoritmoGenetico::gerarNovaPopulacao() {
-	std::vector<Cromossomo*> novaPopulacao = this->elitismo();
-	
-	std::random_device randomNumber;
-	std::mt19937 seed(randomNumber());
-	std::uniform_int_distribution<int> gap(0, this->populacao.size() - 1);
-	Cromossomo* selecionado1 = nullptr;
-	Cromossomo* selecionado2 = nullptr;
-	
-	Cromossomo* individuoMaisApto1 = nullptr;
-	Cromossomo* individuoMaisApto2 = nullptr;
-	
-	Cromossomo* novoIndividuo = nullptr;
-	Cromossomo* filho = nullptr;
-	
-	
-	while (novaPopulacao.size() < this->populacao.size()) {
-		selecionado1 = this->populacao[gap(seed)];
-		selecionado2 = this->populacao[gap(seed)];
+    std::vector<Cromossomo*> novaPopulacao = this->elitismo();
 
-		individuoMaisApto1 = this->selecionarMelhorIndividuo(selecionado1, selecionado2);
-			
-		selecionado1 = this->populacao[gap(seed)];
-		selecionado2 = this->populacao[gap(seed)];
+    std::random_device randomNumber;
+    std::mt19937 seed(randomNumber());
+    std::uniform_int_distribution<int> gap(0, this->populacao.size() - 1);
+    size_t randomPosition1, randomPosition2 = 0;
 
-		individuoMaisApto2 = this->selecionarMelhorIndividuo(selecionado1, selecionado2);
-		
-		novoIndividuo = this->crossOver(individuoMaisApto1, individuoMaisApto2);
+    auto gerarDoisIndicesDistintos = [&](size_t& numero1, size_t& numero2) {
+        numero1 = gap(seed);
+        while (numero1 == numero2)
+        	numero2 = gap(seed);
+    };
 
-		filho = this->mutacao(novoIndividuo);
-		novaPopulacao.push_back(individuoMaisApto2);
-	}
-	
-	return novaPopulacao;
+    Cromossomo* selecionado1 = nullptr;
+    Cromossomo* selecionado2 = nullptr;
+    Cromossomo* individuoMaisApto1 = nullptr;
+    Cromossomo* individuoMaisApto2 = nullptr;
+    Cromossomo* novoIndividuo = nullptr;
+
+    while (novaPopulacao.size() < this->populacao.size()) {
+        gerarDoisIndicesDistintos(randomPosition1, randomPosition2);
+        selecionado1 = this->populacao[randomPosition1];
+        selecionado2 = this->populacao[randomPosition2];
+        individuoMaisApto1 = this->selecionarMelhorIndividuo(selecionado1, selecionado2);
+
+        gerarDoisIndicesDistintos(randomPosition1, randomPosition2);
+        selecionado1 = this->populacao[randomPosition1];
+        selecionado2 = this->populacao[randomPosition2];
+        individuoMaisApto2 = this->selecionarMelhorIndividuo(selecionado1, selecionado2);
+
+        novoIndividuo = this->crossOver(individuoMaisApto1, individuoMaisApto2, nullptr);
+
+        novaPopulacao.push_back(novoIndividuo);
+    }
+
+    return novaPopulacao;
 }
 
 // 
@@ -245,16 +268,17 @@ std::vector<Cromossomo*> AlgoritmoGenetico::gerarNovaPopulacao() {
 // retorna o melhor indivíduo dentre as gerações
 //
 
-Cromossomo* AlgoritmoGenetico::rodarAG(size_t quantidadeDeGeracoes) {
-	this->criarPopulacao(this->tamanhoDaPopulacao);
-	Cromossomo* melhorIndividuo = nullptr;
-    	
-	for (size_t i = 0; i < quantidadeDeGeracoes; ++i) {
-		melhorIndividuo = this->obterMelhorIndividuo();
-		this->populacao = this->gerarNovaPopulacao();	
-	}
-	
-	return melhorIndividuo;
+Cromossomo* AlgoritmoGenetico::rodarAG(size_t quantidadeDeGeracoes, Cromossomo*(*heuristic)(Graph*), Graph* graph) {
+   this->criarPopulacao(heuristic, graph);
+
+   Cromossomo* melhorIndividuo = nullptr;
+
+   for (size_t i = 0; i < quantidadeDeGeracoes; ++i) {                                                 
+       melhorIndividuo = this->obterMelhorIndividuo();
+       this->populacao = this->gerarNovaPopulacao();	
+   }
+
+    return melhorIndividuo;
 }
 
 

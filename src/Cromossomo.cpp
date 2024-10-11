@@ -1,6 +1,8 @@
 #include "Cromossomo.hpp"
 
-Cromossomo::~Cromossomo() {}
+Cromossomo::~Cromossomo() {
+    delete this->graph;
+}
 
 Cromossomo::Cromossomo(std::vector<int> genes, Graph* graph) {
 	this->quantidadeDeGenes = genes.size();

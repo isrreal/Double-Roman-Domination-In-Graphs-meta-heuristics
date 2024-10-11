@@ -21,6 +21,8 @@ struct Cromossomo {
     	Cromossomo(Cromossomo* cromossomo);
         
 	~Cromossomo();
+
+    friend std::ostream& operator<<(std::ostream& os, const Cromossomo& cromossomo);
 };
 
 #endif

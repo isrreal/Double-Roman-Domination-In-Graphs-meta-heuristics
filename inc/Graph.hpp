@@ -2,12 +2,12 @@
 #define GRAPH_HPP
 
 #include <iostream>
-#include <queue>
 #include <stack>
 #include <random>
 #include <algorithm>
 #include <vector>
 #include <list>
+#include <queue>
 
 class Graph {
 private:
@@ -25,7 +25,7 @@ public:
     Graph(size_t order, bool isDirected, float probabilityOfEdge);	
     Graph(const Graph& graph);
     Graph();
-    ~Graph();
+    ~Graph() = default;
  
     size_t getSize();
     size_t getOrder();
@@ -47,16 +47,7 @@ public:
     
     void deleteVertex(size_t vertex);
     
-    friend std::ostream& operator<< (std::ostream& os, const Graph& graph) {
-        for (size_t i = 0; i < graph.adjList.size(); ++i) {
-		std::cout << i << " ----> ";
-		for (const auto& it: graph.adjList[i])
-			std::cout << it << " ";
-			// std::cout << it << " (" << graph.adjList[it]->label << ") ";
-		std::cout << std::endl;
-	}
-        return os;
-    }
+    friend std::ostream& operator<< (std::ostream& os, const Graph& graph);
 };
 
 #endif

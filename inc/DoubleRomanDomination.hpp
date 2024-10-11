@@ -1,5 +1,5 @@
-#ifndef ROMANDOMINATION_HPP
-#define ROMANDOMINATION_HPP
+#ifndef DOUBLE_ROMAN_DOMINATION_HPP
+#define DOUBLE_ROMAN_DOMINATION_HPP
 
 #include "Graph.hpp"
 #include "AlgoritmoGenetico.hpp"
@@ -8,25 +8,24 @@
 #include <random>
 #include <list>
 
-class DoubleRomanDomination: public AlgoritmoGenetico {
+class DoubleRomanDomination {
 	private:
 		Graph* graph;
+        AlgoritmoGenetico* geneticAlgorithm;
 		size_t gamma2r;	
 		void fiabilityCheck();
 	public:
 	DoubleRomanDomination(Graph* graph, size_t tamanhoDaPopulacao, size_t quantidadeDeGenes,
                       float taxaDeMutacao, float taxaDeElitismo) 
-    : AlgoritmoGenetico(tamanhoDaPopulacao, quantidadeDeGenes, taxaDeMutacao, taxaDeElitismo),
+    : geneticAlgorithm(new AlgoritmoGenetico(tamanhoDaPopulacao, quantidadeDeGenes, taxaDeMutacao, taxaDeElitismo)),
       graph(graph), gamma2r(0) {}
 
-	    Cromossomo* heuristic1();
-	    Cromossomo* heuristic2();
-        Cromossomo* heuristic3();
-        void criarPopulacao(size_t quantidadeDeCromossomos) override;
-        // void criarCromossomo(size_t quantidadeDeCromossomos, Graph* graph) override;
-        
-//        Cromossomo* rodarAG(size_t quantidadeDeGeracoes) override; 
-
-	// std::pair<Cromossomo*, int> fitness(Cromossomo*) override;
+        ~DoubleRomanDomination();
+        Graph* getGraph();
+        size_t getGamma2R();
+        AlgoritmoGenetico* getGeneticAlgorithm();
+	    static Cromossomo* heuristic1(Graph* graph);
+	    static Cromossomo* heuristic2(Graph* graph);
+        static Cromossomo* heuristic3(Graph* graph);
 };
 #endif

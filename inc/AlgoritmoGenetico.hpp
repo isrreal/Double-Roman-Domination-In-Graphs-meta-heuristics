@@ -7,7 +7,7 @@
 #include "Cromossomo.hpp"
 
 class AlgoritmoGenetico {
-	protected:
+	private:
 		size_t tamanhoDaPopulacao;
 		size_t quantidadeDeGenes;
 		float taxaDeMutacao;
@@ -15,13 +15,13 @@ class AlgoritmoGenetico {
 		std::vector<Cromossomo*> populacao;
 		std::vector<std::string> subgrupos;
 		
-	virtual	Cromossomo* criarCromossomo(size_t quantidadeDeGenes);
-        virtual void criarPopulacao(size_t quantidadeDeCromossomos);
+	    Cromossomo* criarCromossomo(size_t quantidadeDeGenes);
+        void criarPopulacao(Cromossomo*(*heuristic)(Graph*), Graph* graph);
         std::vector<std::string> binarioParaDecimal(std::vector<std::string>);
-        virtual std::pair<Cromossomo*, int> fitness(Cromossomo*);
+        std::pair<Cromossomo*, int> fitness(Cromossomo*);
 
         Cromossomo* selecionarMelhorIndividuo(Cromossomo*, Cromossomo*);
-        virtual Cromossomo* crossOver(Cromossomo* pai, Cromossomo* mae);
+        Cromossomo* crossOver(Cromossomo* pai, Cromossomo* mae, Cromossomo*(*crossOverHeuristic)(Cromossomo*, Cromossomo*)); 
         Cromossomo* feasibilityCheck(Cromossomo* cromossomo);
         Cromossomo* mutacao(Cromossomo*);
         std::vector<Cromossomo*> elitismo();
@@ -31,9 +31,11 @@ class AlgoritmoGenetico {
 		AlgoritmoGenetico(size_t tamanhoDaPopulacao, size_t quantidadeDeGenes,
 			       	float taxaDeMutacao, float taxaDeElitismo):
         				tamanhoDaPopulacao(tamanhoDaPopulacao), quantidadeDeGenes(quantidadeDeGenes),
-				       	taxaDeMutacao(taxaDeMutacao), taxaDeElitismo(taxaDeElitismo) {}
-	
-		Cromossomo* rodarAG(size_t);	
+				       	taxaDeMutacao(taxaDeMutacao), taxaDeElitismo(taxaDeElitismo),
+                        populacao(tamanhoDaPopulacao, nullptr) {}
+        ~AlgoritmoGenetico();
+      
+		Cromossomo* rodarAG(size_t quantidadeDeGeracoes, Cromossomo*(*heuristic)(Graph*), Graph* graph);
         std::string binarioParaDecimal(std::string);
         std::vector<std::string> leituraDeValores(Cromossomo*, size_t);
 };	

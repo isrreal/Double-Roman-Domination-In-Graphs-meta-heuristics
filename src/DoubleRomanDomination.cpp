@@ -1,39 +1,54 @@
 #include "DoubleRomanDomination.hpp"
-
-void DoubleRomanDomination::criarPopulacao(size_t quantidadeDeCromossomos) {
-    for (size_t i = 0; i < quantidadeDeCromossomos; ++i)        
-        this->populacao.push_back(heuristic3());
+DoubleRomanDomination::~DoubleRomanDomination() {
+    delete this->geneticAlgorithm;
+    delete this->graph;
+}
+AlgoritmoGenetico* DoubleRomanDomination::getGeneticAlgorithm() {
+    return this->geneticAlgorithm;
 }
 
+Graph* DoubleRomanDomination::getGraph() {
+    return this->graph;
+}
 
-Cromossomo* DoubleRomanDomination::heuristic1() {
-	Graph* temp = new Graph(*this->graph);
-	Cromossomo* solution = new Cromossomo(temp->getOrder(), temp);
+size_t DoubleRomanDomination::getGamma2R() {
+    size_t summation = 0;
+    Cromossomo* temp = this->geneticAlgorithm->rodarAG(100, DoubleRomanDomination::heuristic1, this->graph);
+
+    std::for_each(temp->genes.begin(), temp->genes.end(), [&summation](int element) {
+        summation += element;
+    });
+
+    return summation;                                                                                                                             
+}
+
+Cromossomo* DoubleRomanDomination::heuristic1(Graph* graph) {
+	Cromossomo* solution = new Cromossomo(graph->getOrder(), graph);
 	
 	std::random_device randomNumber;
 	std::mt19937 seed(randomNumber());
-	std::uniform_int_distribution<int> gap(0, temp->getOrder() - 1);
+	std::uniform_int_distribution<int> gap(0, graph->getOrder() - 1);
 	
 	size_t choosenVertex = -1;
                              
-    while (temp->getOrder() > 0) {
+    while (graph->getOrder() > 0) {
 	    choosenVertex = gap(seed);
-	    while (temp->getAdjacencyList(choosenVertex) == std::list<int>{-1})
+	    while (graph->getAdjacencyList(choosenVertex) == std::list<int>{-1})
 		    choosenVertex = gap(seed);	
 	    solution->genes[choosenVertex] = 3;
 	    	
-	    for (const auto& it: temp->getAdjacencyList(choosenVertex)) {
+	    for (const auto& it: graph->getAdjacencyList(choosenVertex)) {
 		    if (solution->genes[it] == -1)
 			    solution->genes[it] = 0;
 	    }
 	
-   	    temp->deleteAdjacencyList(choosenVertex);
+   	    graph->deleteAdjacencyList(choosenVertex);
     	
-	    if (temp->getOrder() == 1) {
-		    while (temp->getAdjacencyList(choosenVertex) == std::list<int>{-1})
+	    if (graph->getOrder() == 1) {
+		    while (graph->getAdjacencyList(choosenVertex) == std::list<int>{-1})
 		        choosenVertex = gap(seed);
 	        solution->genes[choosenVertex] = 3;
-            temp->deleteAdjacencyList(choosenVertex);
+            graph->deleteAdjacencyList(choosenVertex);
         }
    }  
     	
@@ -42,35 +57,34 @@ Cromossomo* DoubleRomanDomination::heuristic1() {
 
 
 
-Cromossomo* DoubleRomanDomination::heuristic2() {
-    Graph* temp = new Graph(*this->graph);
-    Cromossomo* solution = new Cromossomo(temp->getOrder(), temp); 
+Cromossomo* DoubleRomanDomination::heuristic2(Graph* graph) {
+    Cromossomo* solution = new Cromossomo(graph->getOrder(), graph); 
     std::random_device randomNumber;
     std::mt19937 seed(randomNumber());
-    std::uniform_int_distribution<int> gap(0, temp->getOrder() - 1);
+    std::uniform_int_distribution<int> gap(0, graph->getOrder() - 1);
     
     size_t choosenVertex = 0;
-    size_t tempOrder = temp->getOrder();
+    size_t graphOrder = graph->getOrder();
 
-    while (temp->getOrder() > 0) {
+    while (graph->getOrder() > 0) {
         choosenVertex = gap(seed);
-        while (temp->getAdjacencyList(choosenVertex) == std::list<int>{-1})
+        while (graph->getAdjacencyList(choosenVertex) == std::list<int>{-1})
             choosenVertex = gap(seed);
 
     	solution->genes[choosenVertex] = 3;
  
-        for (const auto& it: temp->getAdjacencyList(choosenVertex)) {
+        for (const auto& it: graph->getAdjacencyList(choosenVertex)) {
             if (solution->genes[it] == -1)
                 solution->genes[it] = 0;
         }
  
-        temp->deleteAdjacencyList(choosenVertex);
+        graph->deleteAdjacencyList(choosenVertex);
 
-        for (size_t i = 0; i < tempOrder; ++i) {
-           if (temp->getAdjacencyList(i).front() != -1) {
-                if (temp->getVertexDegree(i) == 0) {
+        for (size_t i = 0; i < graphOrder; ++i) {
+           if (graph->getAdjacencyList(i).front() != -1) {
+                if (graph->getVertexDegree(i) == 0) {
                     solution->genes[i] = 2;
-                    temp->deleteVertex(i);
+                    graph->deleteVertex(i);
                 }
             }
         }
@@ -80,49 +94,53 @@ Cromossomo* DoubleRomanDomination::heuristic2() {
 }
 
 
-Cromossomo* DoubleRomanDomination::heuristic3() {
-    Graph* temp = new Graph(*this->graph);
-    Cromossomo* solution = new Cromossomo(temp->getOrder(), temp);
-    std::vector<size_t> sortedVertices(temp->getOrder());
-    size_t tempOrder = temp->getOrder();
+Cromossomo* DoubleRomanDomination::heuristic3(Graph* graph) {
+    Cromossomo* solution = new Cromossomo(graph->getOrder(), graph);
+    std::vector<size_t> sortedVertices(graph->getOrder());
+    size_t graphOrder = graph->getOrder();
 
-    for (size_t i = 0; i < temp->getOrder(); ++i)
+    for (size_t i = 0; i < graph->getOrder(); ++i)
         sortedVertices[i] = i;
 
     std::sort(sortedVertices.begin(), sortedVertices.end(),
         [&](size_t a, size_t b) {
-            return temp->getVertexDegree(a) > temp->getVertexDegree(b);
+            return graph->getVertexDegree(a) > graph->getVertexDegree(b);
     });
 
     size_t choosenVertex = 0;
 
-    while ((temp->getOrder() > 0) && (choosenVertex < sortedVertices.size())) {
+    while ((graph->getOrder() > 0) && (choosenVertex < sortedVertices.size())) {
 
         if (choosenVertex >= sortedVertices.size()) break;
 
         while (choosenVertex < sortedVertices.size() && 
-               temp->getAdjacencyList(sortedVertices[++choosenVertex]) == std::list<int>{-1});
+               graph->getAdjacencyList(sortedVertices[choosenVertex]) == std::list<int>{-1}) {
+               	choosenVertex++;
+               }
 
         if (choosenVertex >= sortedVertices.size()) break;
 
         solution->genes[sortedVertices[choosenVertex]] = 3;
 
-        for (const auto& it : temp->getAdjacencyList(sortedVertices[choosenVertex])) {
+        for (const auto& it : graph->getAdjacencyList(sortedVertices[choosenVertex])) {
             if (solution->genes[it] == -1)
                 solution->genes[it] = 0;
         }
 
-    	temp->deleteAdjacencyList(sortedVertices[choosenVertex++]);
+    	graph->deleteAdjacencyList(sortedVertices[choosenVertex++]);
 
-        for (size_t i = 0; i < tempOrder; ++i) {
-           if (temp->getAdjacencyList(i).front() != -1) {
-                if (temp->getVertexDegree(i) == 0) {
+        for (size_t i = 0; i < graphOrder; ++i) {
+           if (graph->getAdjacencyList(i).front() != -1) {
+                if (graph->getVertexDegree(i) == 0) {
                     solution->genes[i] = 2;
-                    temp->deleteVertex(i);
+                    graph->deleteVertex(i);
+                 //   std::cout << *graph << std::endl;
                 }
             }
         }
     }
+    
+  //  std::cout << *graph << std::endl;
 
     return solution;
 }

@@ -43,12 +43,6 @@ Graph::Graph(const Graph& graph) {
 
 Graph::Graph() {}
 
-// Destructor
-
-Graph::~Graph() {
-    adjList.clear();
-}
-
 void Graph::addEdge(int source, int destination) {
     if (this->isDirected == false) {
         this->adjList[source].push_back(destination);
@@ -118,7 +112,7 @@ void Graph::depthFirstSearch() {
 void Graph::deleteAdjacencyList(size_t vertex) {
     if ((vertex >= this->adjList.size()) || (this->adjList[vertex] == std::list<int>{-1})) 
         return;
-
+        
     std::queue<int> toDelete;
     toDelete.push(vertex);
     int currentVertex = -1;
@@ -142,3 +136,16 @@ void Graph::deleteVertex(size_t vertex) {
     --this->order;
     this->size -= this->adjList[vertex].size();
 }
+
+
+
+
+std::ostream& operator<< (std::ostream& os, const Graph& graph) {
+    for (size_t i = 0; i < graph.adjList.size(); ++i) {
+ 	    std::cout << i << " ----> ";
+ 	    for (const auto& it: graph.adjList[i])
+ 		    std::cout << it << " ";
+ 	    std::cout << std::endl;
+    }
+     return os;
+ }

@@ -5,7 +5,7 @@ DoubleRomanDomination::~DoubleRomanDomination() {
     delete this->graph;
 }
 
-AlgoritmoGenetico* DoubleRomanDomination::getGeneticAlgorithm() {
+GeneticAlgorithm* DoubleRomanDomination::getGeneticAlgorithm() {
     return this->geneticAlgorithm;
 }
 
@@ -15,7 +15,7 @@ Graph* DoubleRomanDomination::getGraph() {
 
 size_t DoubleRomanDomination::getGamma2R() {
     size_t summation = 0;
-    Cromossomo* temp = this->geneticAlgorithm->rodarAG(quantidadeDeGeracoes, AlgoritmoGenetico::tournamentSelection,
+    Cromossome* temp = this->geneticAlgorithm->run(geneticAlgorithm->getGenerations(), GeneticAlgorithm::tournamentSelection,
             DoubleRomanDomination::heuristic1, this->graph);
 
     std::for_each(temp->genes.begin(), temp->genes.end(), [&summation](int element) {
@@ -25,8 +25,8 @@ size_t DoubleRomanDomination::getGamma2R() {
     return summation;                                                                                                                             
 }
 
-Cromossomo* DoubleRomanDomination::heuristic1(Graph* graph) {
-	Cromossomo* solution = new Cromossomo(graph->getOrder(), graph);
+Cromossome* DoubleRomanDomination::heuristic1(Graph* graph) {
+	Cromossome* solution = new Cromossome(graph->getOrder(), graph);
 	std::random_device randomNumber;
 	std::mt19937 seed(randomNumber());
 	std::uniform_int_distribution<int> gap(0, graph->getOrder() - 1);
@@ -57,8 +57,8 @@ Cromossomo* DoubleRomanDomination::heuristic1(Graph* graph) {
 
 
 
-Cromossomo* DoubleRomanDomination::heuristic2(Graph* graph) {
-    Cromossomo* solution = new Cromossomo(graph->getOrder(), graph); 
+Cromossome* DoubleRomanDomination::heuristic2(Graph* graph) {
+    Cromossome* solution = new Cromossome(graph->getOrder(), graph); 
     std::random_device randomNumber;
     std::mt19937 seed(randomNumber());
     std::uniform_int_distribution<int> gap(0, graph->getOrder() - 1);
@@ -93,8 +93,8 @@ Cromossomo* DoubleRomanDomination::heuristic2(Graph* graph) {
 }
 
 
-Cromossomo* DoubleRomanDomination::heuristic3(Graph* graph) {
-    Cromossomo* solution = new Cromossomo(graph->getOrder(), graph);
+Cromossome* DoubleRomanDomination::heuristic3(Graph* graph) {
+    Cromossome* solution = new Cromossome(graph->getOrder(), graph);
     std::vector<size_t> sortedVertices(graph->getOrder());
     size_t graphOrder = graph->getOrder();
 

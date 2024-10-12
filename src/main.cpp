@@ -1,10 +1,10 @@
-#include "AlgoritmoGenetico.hpp"
+#include "GeneticAlgorithm.hpp"
 #include "DoubleRomanDomination.hpp"
 #include "Graph.hpp"
 
 int main() {
     Graph* graph = new Graph(10, false, 0.1);
-    DoubleRomanDomination* drd = new DoubleRomanDomination(graph, 10000, 100, graph->getOrder(), 0.35, 0.75);
+    DoubleRomanDomination* drd = new DoubleRomanDomination(graph, 100, graph->getOrder(), 500);
     std::cout << drd->getGamma2R(); 
     return 0;
 }

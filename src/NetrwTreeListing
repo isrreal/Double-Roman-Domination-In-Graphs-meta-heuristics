@@ -1,0 +1,18 @@
+../
+2RDF/
+| .git/
+| inc/
+| | Cromossome.hpp
+| | DoubleRomanDomination.hpp
+| | GeneticAlgorithm.hpp
+| | Graph.hpp
+| | .GeneticAlgorithm.hpp.swp
+| obj/
+| src/
+| | Cromossome.cpp
+| | DoubleRomanDomination.cpp
+| | GeneticAlgorithm.cpp
+| | Graph.cpp
+| | main.cpp
+| app*
+| makefile

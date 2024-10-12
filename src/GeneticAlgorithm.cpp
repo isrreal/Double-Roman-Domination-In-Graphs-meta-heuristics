@@ -40,43 +40,16 @@ void GeneticAlgorithm::createPopulation(Cromossome*(*heuristic)(Graph*), Graph* 
 // a função recebe um cromossome e atribui sua nota de aptidão
 // retorna um par contendo o cromossome e sua nota de aptidão
 
-std::pair<Cromossome*, int> GeneticAlgorithm::fitness(Cromossome* cromossome) {
-	size_t fitnessValue = 0;
+std::pair<Cromossome*, size_t> GeneticAlgorithm::fitness(Cromossome* cromossome, std::pair<Cromossome*, size_t>(*fitnessHeuristic)(Cromossome*)) {
+    if (fitnessHeuristic)
+        return (*fitnessHeuristic)(cromossome);
+
+    size_t fitnessValue = 0;
 	for (size_t i = 0; i < cromossome->genesSize; ++i)
 		fitnessValue += cromossome->genes[i];
 	return {cromossome, fitnessValue};
 }
 
-//
-// A função escolhe aleatoriamente os cromossomes da população inicial e testa a aptidão de cada um 
-// retorna o cromossome geneticamente superior 
-//
-
-Cromossome* GeneticAlgorithm::tournamentSelection(std::vector<Cromossome*> population) {
-	std::random_device randomNumber;
-	std::mt19937 seed(randomNumber());
-	std::uniform_int_distribution<int> gap(0, population.size() - 1);
-	std::pair<Cromossome*, int> bestSolution = fitness(population[gap(seed)]);
-	std::pair<Cromossome*, int> temp;
-	
-	for (size_t i = 0; i < population.size(); ++i) {
-		temp = fitness(population[i]);
-		if (temp.second > bestSolution.second)
-			bestSolution = temp;
-	}
-	
-	return bestSolution.first;
-}
-
-// @brief seleciona aleatoriamente algum cromossome da população e o retorna 
-
-Cromossome* GeneticAlgorithm::rouletteWheelSelection(std::vector<Cromossome*> population) {
-    std::random_device randomNumber;                                
-    std::mt19937 seed(randomNumber()); 
-    std::uniform_int_distribution<> gap(0, population.size() - 1);
-    
-    return population[gap(seed)];
-}
 
 /**
  * @brief Seleciona um cromossome da população utilizando uma heurística de seleção específica e o remove da população.
@@ -89,7 +62,7 @@ Cromossome* GeneticAlgorithm::rouletteWheelSelection(std::vector<Cromossome*> po
  * @return Cromossome* O cromossome selecionado e removido da população, ou nullptr se não houver seleção válida.
  */
 
-Cromossome* GeneticAlgorithm::selectionMethod(Cromossome* (*selectionHeuristic)(std::vector<Cromossome*>)) {
+Cromossome* GeneticAlgorithm::selectionMethod(Cromossome*(*selectionHeuristic)(std::vector<Cromossome*>)) {
     if (!selectionHeuristic) 
         return nullptr; 
   
@@ -109,7 +82,7 @@ Cromossome* GeneticAlgorithm::selectionMethod(Cromossome* (*selectionHeuristic)(
 // retorna o cromossome com mais aptidão dentre os comparados
 
 Cromossome* GeneticAlgorithm::chooseBestSolution(Cromossome* cromossome1, Cromossome* cromossome2) {
-	    return (this->fitness(cromossome1).second > this->fitness(cromossome2).second ? cromossome1 : cromossome2);
+	    return (this->fitness(cromossome1, nullptr).second > this->fitness(cromossome2, nullptr).second ? cromossome1 : cromossome2);
 }
 
 
@@ -173,7 +146,8 @@ Cromossome* GeneticAlgorithm::feasibilityCheck(Cromossome* cromossome) {
 // retorna uma nova população geneticamente superior
 //
 
-std::vector<Cromossome*> GeneticAlgorithm::createNewPopulation() {
+std::vector<Cromossome*> GeneticAlgorithm::createNewPopulation(Cromossome*(*selectionMethod1)(std::vector<Cromossome*>),
+        Cromossome*(*selectionMethod2)(std::vector<Cromossome*>)) {
     std::vector<Cromossome*> newPopulation = this->population;
 
     Cromossome* selected1 = nullptr;
@@ -181,8 +155,8 @@ std::vector<Cromossome*> GeneticAlgorithm::createNewPopulation() {
     Cromossome* offspring = nullptr;
 
     while (newPopulation.size() < this->population.size()) {
-        selected1 = this->selectionMethod(GeneticAlgorithm::tournamentSelection);
-        selected2 = this->selectionMethod(GeneticAlgorithm::rouletteWheelSelection);
+        selected1 = this->selectionMethod(selectionMethod1);
+        selected2 = this->selectionMethod(selectionMethod2);
        
         offspring = this->crossOver(selected1, selected2, nullptr);
 
@@ -198,16 +172,19 @@ std::vector<Cromossome*> GeneticAlgorithm::createNewPopulation() {
 //
 
 Cromossome* GeneticAlgorithm::run(size_t generations,
-        Cromossome*(*selectionHeuristic)(std::vector<Cromossome*>),
-        Cromossome*(*heuristic)(Graph*), Graph* graph) {
+        Cromossome*(*heuristic)(Graph*), 
+        Cromossome*(*selectionHeuristic1)(std::vector<Cromossome*>),
+        Cromossome*(*selectionHeuristic2)(std::vector<Cromossome*>),
+        Graph* graph) {
         
    this->createPopulation(heuristic, graph);
 
    Cromossome* bestSolution = nullptr;
    
    for (size_t i = 0; i < generations; ++i) {                                                 
-       bestSolution = this->selectionMethod(selectionHeuristic);
-       this->population = this->createNewPopulation();	
+       bestSolution = this->selectionMethod(selectionHeuristic1);
+       this->population = this->createNewPopulation(selectionHeuristic1, selectionHeuristic2);	
    }
+
    return bestSolution;
 }

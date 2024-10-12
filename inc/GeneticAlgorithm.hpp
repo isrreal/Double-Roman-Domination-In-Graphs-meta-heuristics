@@ -18,7 +18,9 @@ class GeneticAlgorithm {
 		Cromossome* crossOver(Cromossome* cromossome1, Cromossome* cromossomo2,
                 Cromossome*(*crossOverHeuristic)(Cromossome*, Cromossome*)); 
 		Cromossome* feasibilityCheck(Cromossome* cromossome);
-		std::vector<Cromossome*> createNewPopulation();
+		std::vector<Cromossome*> createNewPopulation(Cromossome*(*selectionMethod1)(std::vector<Cromossome*>),
+                Cromossome*(*selectionMethod2)(std::vector<Cromossome*>));
+        std::pair<Cromossome*, size_t> fitness(Cromossome* cromossome, std::pair<Cromossome*, size_t> (*fitnessHeuristic)(Cromossome*));
 	public:
 		GeneticAlgorithm(size_t populationSize, size_t genesSize, size_t generations):
         				populationSize(populationSize), genesSize(genesSize),
@@ -29,12 +31,10 @@ class GeneticAlgorithm {
         size_t getGenesSize();
         size_t getGenerations();          
 		Cromossome* run(size_t generations, 
-                Cromossome*(*selectionMethod)(std::vector<Cromossome*>),
-                Cromossome*(*heuristic)(Graph*), Graph* graph);
-       
-        static std::pair<Cromossome*, int> fitness(Cromossome*);
-        static Cromossome* tournamentSelection(std::vector<Cromossome*> population);
-        static Cromossome* rouletteWheelSelection(std::vector<Cromossome*> population);                                                                                                     
+                Cromossome*(*heuristic)(Graph*),
+                Cromossome*(*selectionHeuristic1)(std::vector<Cromossome*>),
+                Cromossome*(*selectionHeuristic2)(std::vector<Cromossome*>),
+                Graph* graph);
 };	
 
 #endif

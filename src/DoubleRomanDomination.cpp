@@ -14,15 +14,17 @@ Graph* DoubleRomanDomination::getGraph() {
 }
 
 size_t DoubleRomanDomination::getGamma2R() {
-    size_t summation = 0;
-    Cromossome* temp = this->geneticAlgorithm->run(geneticAlgorithm->getGenerations(), GeneticAlgorithm::tournamentSelection,
-            DoubleRomanDomination::heuristic1, this->graph);
+    Cromossome* temp = this->geneticAlgorithm->run(geneticAlgorithm->getGenerations(),  
+            DoubleRomanDomination::heuristic1,
+            DoubleRomanDomination::tournamentSelection,
+            DoubleRomanDomination::rouletteWheelSelection,
+            this->graph);
 
-    std::for_each(temp->genes.begin(), temp->genes.end(), [&summation](int element) {
-        summation += element;
+    std::for_each(temp->genes.begin(), temp->genes.end(), [&](int element) {
+        this->gamma2r += element;
     });
 
-    return summation;                                                                                                                             
+    return this->gamma2r;                                                                                                                             
 }
 
 Cromossome* DoubleRomanDomination::heuristic1(Graph* graph) {
@@ -139,4 +141,45 @@ Cromossome* DoubleRomanDomination::heuristic3(Graph* graph) {
     }
 
     return solution;
+}
+
+
+
+// calcula o fitness do cromossomo
+
+std::pair<Cromossome*, size_t> DoubleRomanDomination::fitness(Cromossome* cromossome) {
+    size_t fitnessValue = 0;
+	for (size_t i = 0; i < cromossome->genesSize; ++i)
+		fitnessValue += cromossome->genes[i];
+	return {cromossome, fitnessValue};
+}
+//
+// A função escolhe aleatoriamente os cromossomes da população inicial e testa a aptidão de cada um 
+// retorna o cromossome geneticamente superior 
+//
+
+Cromossome* DoubleRomanDomination::tournamentSelection(std::vector<Cromossome*> population) {
+	std::random_device randomNumber;
+	std::mt19937 seed(randomNumber());
+	std::uniform_int_distribution<int> gap(0, population.size() - 1);
+	std::pair<Cromossome*, int> bestSolution = fitness(population[gap(seed)]);
+	std::pair<Cromossome*, int> temp;
+	
+	for (size_t i = 0; i < population.size(); ++i) {
+		temp = fitness(population[i]);
+		if (temp.second > bestSolution.second)
+			bestSolution = temp;
+	}
+	
+	return bestSolution.first;
+}
+
+// @brief seleciona aleatoriamente algum cromossome da população e o retorna 
+
+Cromossome* DoubleRomanDomination::rouletteWheelSelection(std::vector<Cromossome*> population) {
+    std::random_device randomNumber;                                
+    std::mt19937 seed(randomNumber()); 
+    std::uniform_int_distribution<> gap(0, population.size() - 1);
+    
+    return population[gap(seed)];
 }

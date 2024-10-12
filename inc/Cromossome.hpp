@@ -8,10 +8,11 @@
 
 struct Cromossome {
 	size_t genesSize;
-    std::vector<int> genes;
-    Graph* graph;
+    	std::vector<int> genes;
+    	Graph* graph;
         // indice de onde se encontra no vetor de população
-    size_t indexRemove;
+    	size_t indexRemove;
+    	size_t fitnessValue;
 	
 	Cromossome(std::vector<int> genes, Graph* graph);
 
@@ -19,7 +20,7 @@ struct Cromossome {
 
 	Cromossome(std::vector<int> primeiraMetade, std::vector<int> segundaMetade, Graph* graph);
     
-    Cromossome(Cromossome* cromossome);
+    	Cromossome(Cromossome* cromossome);
         
 	~Cromossome();
 

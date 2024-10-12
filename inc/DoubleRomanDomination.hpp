@@ -22,10 +22,10 @@ class DoubleRomanDomination {
         Graph* getGraph();
         size_t getGamma2R();
         GeneticAlgorithm* getGeneticAlgorithm();
-	    static Cromossome* heuristic1(Graph* graph);
-	    static Cromossome* heuristic2(Graph* graph);
+        static Cromossome* heuristic1(Graph* graph);
+        static Cromossome* heuristic2(Graph* graph);
         static Cromossome* heuristic3(Graph* graph);   
-        static std::pair<Cromossome*, size_t> fitness(Cromossome*);
+        static Cromossome* fitness(Cromossome*);
         static Cromossome* tournamentSelection(std::vector<Cromossome*> population);
         static Cromossome* rouletteWheelSelection(std::vector<Cromossome*> population);                                                                                                     
 };

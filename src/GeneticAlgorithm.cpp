@@ -263,10 +263,12 @@ Chromosome* GeneticAlgorithm::run(size_t generations, Chromosome*(*heuristic)(Gr
 
    this->createPopulation(heuristic, graph);
 
-   Chromosome* bestSolution = this->tournamentSelection(this->population);
+   Chromosome* bestSolution = nullptr;
 
-   for (size_t i = 0; i < generations; ++i)                                                 
-       this->population = this->createNewPopulation();	
+   for (size_t i = 0; i < generations; ++i) {        
+   	bestSolution = this->tournamentSelection(this->population);                                         
+       	this->population = this->createNewPopulation();	
+   }
 
    return bestSolution;
 }

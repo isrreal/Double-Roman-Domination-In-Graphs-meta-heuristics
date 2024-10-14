@@ -39,12 +39,7 @@ Graph* DoubleRomanDomination::getGraph() {
  */
  
 size_t DoubleRomanDomination::getGamma2R() {
-    Cromossome* temp = this->geneticAlgorithm->run(geneticAlgorithm->getGenerations(),  
-            DoubleRomanDomination::heuristic1,
-            DoubleRomanDomination::fitness,
-            DoubleRomanDomination::tournamentSelection,
-            DoubleRomanDomination::rouletteWheelSelection,
-            this->graph);
+    Chromosome* temp = this->geneticAlgorithm->run(geneticAlgorithm->getGenerations(), heuristic1, this->graph);
 
     std::for_each(temp->genes.begin(), temp->genes.end(), [&](int element) {
         this->gamma2r += element;
@@ -60,10 +55,10 @@ size_t DoubleRomanDomination::getGamma2R() {
  * with a value of 0. The adjacency list of the chosen vertex is then deleted.
  * 
  * @param graph Pointer to the graph used to create the chromosome.
- * @return Cromossome* The generated chromosome solution.
+ * @return Chromosome* The generated chromosome solution.
  */
-Cromossome* DoubleRomanDomination::heuristic1(Graph* graph) {
-    Cromossome* solution = new Cromossome(graph->getOrder(), graph);
+Chromosome* DoubleRomanDomination::heuristic1(Graph* graph) {
+    Chromosome* solution = new Chromosome(graph->getOrder(), graph);
     std::random_device randomNumber;
     std::mt19937 seed(randomNumber());
     std::uniform_int_distribution<int> gap(0, graph->getOrder() - 1);
@@ -100,10 +95,10 @@ Cromossome* DoubleRomanDomination::heuristic1(Graph* graph) {
  * handling vertices with no neighbors by assigning a value of 2.
  * 
  * @param graph Pointer to the graph used to create the chromosome.
- * @return Cromossome* The generated chromosome solution.
+ * @return Chromosome* The generated chromosome solution.
  */
-Cromossome* DoubleRomanDomination::heuristic2(Graph* graph) {
-    Cromossome* solution = new Cromossome(graph->getOrder(), graph);
+Chromosome* DoubleRomanDomination::heuristic2(Graph* graph) {
+    Chromosome* solution = new Chromosome(graph->getOrder(), graph);
     std::random_device randomNumber;
     std::mt19937 seed(randomNumber());
     std::uniform_int_distribution<int> gap(0, graph->getOrder() - 1);
@@ -144,10 +139,10 @@ Cromossome* DoubleRomanDomination::heuristic2(Graph* graph) {
  * for assignment while updating their neighbors.
  * 
  * @param graph Pointer to the graph used to create the chromosome.
- * @return Cromossome* The generated chromosome solution.
+ * @return Chromosome* The generated chromosome solution.
  */
-Cromossome* DoubleRomanDomination::heuristic3(Graph* graph) {
-    Cromossome* solution = new Cromossome(graph->getOrder(), graph);
+Chromosome* DoubleRomanDomination::heuristic3(Graph* graph) {
+    Chromosome* solution = new Chromosome(graph->getOrder(), graph);
     std::vector<size_t> sortedVertices(graph->getOrder());
     size_t graphOrder = graph->getOrder();
 
@@ -192,59 +187,3 @@ Cromossome* DoubleRomanDomination::heuristic3(Graph* graph) {
 
     return solution;
 }
-
-/**
- * @brief Calculates the fitness value of a chromosome.
- * 
- * This function sums up the gene values in the chromosome to compute the fitness score.
- * 
- * @param cromossome Pointer to the chromosome whose fitness value is to be calculated.
- * @return Cromossome* The chromosome with its fitness value calculated.
- */
-Cromossome* DoubleRomanDomination::fitness(Cromossome* cromossome) {
-    for (size_t i = 0; i < cromossome->genesSize; ++i)
-        cromossome->fitnessValue += cromossome->genes[i];
-    return cromossome;
-}
-
-/**
- * @brief Selects the best chromosome from the population using tournament selection.
- * 
- * This method randomly selects chromosomes from the population, evaluates their fitness, 
- * and returns the one with the highest fitness value.
- * 
- * @param population The vector of chromosomes in the current population.
- * @return Cromossome* The chromosome with the highest fitness value.
- */
-Cromossome* DoubleRomanDomination::tournamentSelection(std::vector<Cromossome*> population) {
-    std::random_device randomNumber;
-    std::mt19937 seed(randomNumber());
-    std::uniform_int_distribution<int> gap(0, population.size() - 1);
-    Cromossome* bestSolution = fitness(population[gap(seed)]);
-    Cromossome* temp = nullptr;
-    
-    for (size_t i = 0; i < population.size(); ++i) {
-        temp = fitness(population[i]);
-        if (temp->fitnessValue > bestSolution->fitnessValue)
-            bestSolution = temp;
-    }
-    
-    return bestSolution;
-}
-
-/**
- * @brief Selects a chromosome from the population using roulette wheel selection.
- * 
- * This method randomly selects and returns a chromosome from the population.
- * 
- * @param population The vector of chromosomes in the current population.
- * @return Cromossome* The randomly selected chromosome.
- */
-Cromossome* DoubleRomanDomination::rouletteWheelSelection(std::vector<Cromossome*> population) {
-    std::random_device randomNumber;
-    std::mt19937 seed(randomNumber()); 
-    std::uniform_int_distribution<> gap(0, population.size() - 1);
-    
-    return population[gap(seed)];
-}
-

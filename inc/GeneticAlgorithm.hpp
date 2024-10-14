@@ -4,49 +4,44 @@
 #include <iostream>
 #include <random>
 #include <vector>
-#include "Cromossome.hpp"
+#include "Chromosome.hpp"
 
 class GeneticAlgorithm {
 	private:
 		size_t populationSize;
 		size_t genesSize;
-		std::vector<Cromossome*> population;
+		std::vector<Chromosome*> population;
 	    	size_t generations;
-	    		
-		void createPopulation(Cromossome*(*heuristic)(Graph*), Graph* graph);
+
+		void createPopulation(Chromosome*(*heuristic)(Graph*), Graph* graph);
 		
-		Cromossome* selectionMethod(Cromossome*(*fitnessHeuristic)(Cromossome*),
-		 	Cromossome*(*selectionHeuristic)(std::vector<Cromossome*>));
+		Chromosome* chooseBestSolution(Chromosome* chromosome1, Chromosome* chromosome2);
 		
-		Cromossome* chooseBestSolution(Cromossome* cromossome1, Cromossome* cromossome2);
-		
-		Cromossome* crossOver(Cromossome* cromossome1, Cromossome* cromossomo2,
-                	Cromossome*(*crossOverHeuristic)(Cromossome*, Cromossome*)); 
+		Chromosome* crossOver(Chromosome* chromosome1, Chromosome* cromossomo2,
+                	Chromosome*(*crossOverHeuristic)(Chromosome*, Chromosome*)); 
                 
-		Cromossome* feasibilityCheck(Cromossome* cromossome);
+		Chromosome* feasibilityCheck(Chromosome* chromosome);
 		
-		std::vector<Cromossome*> createNewPopulation(Cromossome*(*fitnessHeuristic)(Cromossome*),
-			Cromossome*(*selectionMethod1)(std::vector<Cromossome*>),
-		        Cromossome*(*selectionMethod2)(std::vector<Cromossome*>));
-                
-        	Cromossome* fitness(Cromossome* cromossome, Cromossome*(*fitnessHeuristic)(Cromossome*));
+		std::vector<Chromosome*> createNewPopulation();
+		
+        	Chromosome* selectionMethod(Chromosome*(*selectionHeuristic)(std::vector<Chromosome*>)); 
+        	
+        	static Chromosome* fitness(Chromosome* chromosome, Chromosome*(*fitnessHeuristic)(Chromosome*));
+		static Chromosome* tournamentSelection(std::vector<Chromosome*> population);
+		static Chromosome* rouletteWheelSelection(std::vector<Chromosome*> population); 
+		
 	public:
 		GeneticAlgorithm(size_t populationSize, size_t genesSize, size_t generations):
         				populationSize(populationSize), genesSize(genesSize),
-                        generations(generations), population(populationSize, nullptr) {}
-                        
+                        		generations(generations), population(populationSize, nullptr) {}                  
+
 		~GeneticAlgorithm();
-		std::vector<Cromossome*> getPopulation();     
+		std::vector<Chromosome*> getPopulation();     
 		size_t getPopulationSize();    
 		size_t getGenesSize();
 		size_t getGenerations();   
 		       
-		Cromossome* run(size_t generations, 
-		        Cromossome*(*heuristic)(Graph*),
-		        Cromossome*(*fitnessHeuristic)(Cromossome*),
-		        Cromossome*(*selectionHeuristic1)(std::vector<Cromossome*>),
-		        Cromossome*(*selectionHeuristic2)(std::vector<Cromossome*>),
-		        Graph* graph);
+		Chromosome* run(size_t generations, Chromosome*(*heuristic)(Graph*), Graph* graph);
 };	
 
 #endif

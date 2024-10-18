@@ -11,7 +11,7 @@ class GeneticAlgorithm {
 		size_t populationSize;
 		size_t genesSize;
 		std::vector<Chromosome*> population;
-	    	size_t generations;
+	    size_t generations;
 
 		void createPopulation(Chromosome*(*heuristic)(Graph*), Graph* graph);
 		
@@ -24,16 +24,16 @@ class GeneticAlgorithm {
 		
 		std::vector<Chromosome*> createNewPopulation();
 		
-        	Chromosome* selectionMethod(Chromosome*(*selectionHeuristic)(std::vector<Chromosome*>)); 
+        Chromosome* selectionMethod(Chromosome*(*selectionHeuristic)(std::vector<Chromosome*>)); 
         	
-        	static Chromosome* fitness(Chromosome* chromosome, Chromosome*(*fitnessHeuristic)(Chromosome*));
+        static Chromosome* fitness(Chromosome* chromosome, Chromosome*(*fitnessHeuristic)(Chromosome*));
 		static Chromosome* tournamentSelection(std::vector<Chromosome*> population);
 		static Chromosome* rouletteWheelSelection(std::vector<Chromosome*> population); 
 		
 	public:
 		GeneticAlgorithm(size_t populationSize, size_t genesSize, size_t generations):
         				populationSize(populationSize), genesSize(genesSize),
-                        		generations(generations), population(populationSize, nullptr) {}                  
+                        generations(generations), population(populationSize, nullptr) {}                  
 
 		~GeneticAlgorithm();
 		std::vector<Chromosome*> getPopulation();     

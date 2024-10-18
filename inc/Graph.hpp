@@ -12,10 +12,8 @@ class Graph {
 private:
     size_t order;
     size_t size;
-    bool isDirected;
-    
+    bool isDirected;  
     std::unordered_map<size_t, std::list<size_t>> adjList;
-
     void addEdge(size_t source, size_t destination);
     
 public:	

@@ -20,7 +20,7 @@ struct Chromosome {
 
 	Chromosome(std::vector<int> primeiraMetade, std::vector<int> segundaMetade, Graph* graph);
     
-    	Chromosome(Chromosome* chromosome);
+    Chromosome(Chromosome* chromosome);
         
 	~Chromosome();
 

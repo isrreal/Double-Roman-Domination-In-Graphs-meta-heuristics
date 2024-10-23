@@ -22,7 +22,7 @@ class DoubleRomanDomination {
     			: graph(graph), gamma2rGeneticAlgorithm(0), gamma2rACO(0),   
                 geneticAlgorithm(new GeneticAlgorithm(graph, populationSize, genesSize, generations)),
     		    ACO(new AntColonyOptimization(graph, iterations, numberOfAnts)) {
-                   // this->runGeneticAlgorithm();                    
+                    this->runGeneticAlgorithm();                    
                     this->runACO();
                 }
 

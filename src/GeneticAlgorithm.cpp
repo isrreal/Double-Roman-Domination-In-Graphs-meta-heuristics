@@ -20,6 +20,9 @@ size_t GeneticAlgorithm::getGenesSize() { return this->genesSize; }
 
 size_t GeneticAlgorithm::getGenerations() { return this->generations; }
 
+Graph GeneticAlgorithm::getGraph() { return this->graph; }
+
+std::vector<int> GeneticAlgorithm::getBestSolution() { return this->bestSolution; } 
 /**
  * @brief Creates a population of chromosomes with a specific number of genes.
  * 
@@ -30,7 +33,7 @@ size_t GeneticAlgorithm::getGenerations() { return this->generations; }
  * @param graph A pointer to the graph used to initialize the chromosomes.
  */
 
-void GeneticAlgorithm::createPopulation(Chromosome*(*generateChromosomeHeuristic)(Graph*), Graph* graph) {
+void GeneticAlgorithm::createPopulation(Chromosome*(*generateChromosomeHeuristic)(Graph), Graph graph) {
     if (generateChromosomeHeuristic) {  
        Chromosome* func = (*generateChromosomeHeuristic)(graph);  
        for (size_t i = 0; i < populationSize; ++i) {
@@ -41,7 +44,7 @@ void GeneticAlgorithm::createPopulation(Chromosome*(*generateChromosomeHeuristic
         
    else {
        for (size_t i = 0; i < populationSize; ++i) {
-           this->population[i] = new Chromosome(genesSize, nullptr); 
+           this->population[i] = new Chromosome(genesSize); 
            this->population[i]->indexRemove = i;
        }
    }
@@ -101,13 +104,30 @@ Chromosome* GeneticAlgorithm::tournamentSelection(std::vector<Chromosome*> popul
  * @param population The vector of chromosomes in the current population.
  * @return Chromosome* The randomly selected chromosome.
  */
+
 Chromosome* GeneticAlgorithm::rouletteWheelSelection(std::vector<Chromosome*> population) {
+    size_t totalFitness = 0;
+
+    for (size_t i = 0; i < population.size(); ++i) {
+        fitness(population[i], nullptr);
+        totalFitness += population[i]->fitnessValue;
+    }
+
     std::random_device randomNumber;
-    std::mt19937 seed(randomNumber()); 
-    std::uniform_int_distribution<> gap(0, population.size() - 1);
+    std::mt19937 seed(randomNumber());
+    std::uniform_int_distribution<> distribution(0, totalFitness - 1);
+    size_t randomValue = distribution(seed);
+
+    size_t cumulativeFitness = 0;
+    for (auto& chromosome: population) {
+        cumulativeFitness += chromosome->fitnessValue;
+        if (cumulativeFitness >= randomValue) 
+            return chromosome;
+    }
     
-    return population[gap(seed)];
+    return population.back();
 }
+
 
 
 /**
@@ -216,7 +236,7 @@ Chromosome* GeneticAlgorithm::crossOver(Chromosome* chromosome1, Chromosome* chr
  
 Chromosome* GeneticAlgorithm::feasibilityCheck(Chromosome* chromosome) {	
 	for (auto& gene: chromosome->genes) {
-		for (auto& adjacency: chromosome->graph->getAdjacencyList(gene)) {
+		for (auto& adjacency: graph.getAdjacencyList(gene)) {
 			if ((gene == 0) &&  (chromosome->genes[adjacency] == 3)) 
 				gene = 2;	
 		}
@@ -259,16 +279,16 @@ std::vector<Chromosome*> GeneticAlgorithm::createNewPopulation() {
  * @return Chromosome* The best solution found after all generations.
  */
 
-Chromosome* GeneticAlgorithm::run(size_t generations, Chromosome*(*heuristic)(Graph*), Graph* graph) { 
+void GeneticAlgorithm::run(size_t generations, Chromosome*(*heuristic)(Graph)) { 
 
    this->createPopulation(heuristic, graph);
 
    Chromosome* bestSolution = nullptr;
 
    for (size_t i = 0; i < generations; ++i) {        
-   	bestSolution = this->tournamentSelection(this->population);                                         
+    	bestSolution = this->tournamentSelection(this->population);                                         
        	this->population = this->createNewPopulation();	
    }
 
-   return bestSolution;
+    this->bestSolution = bestSolution->genes;
 }

@@ -12,8 +12,10 @@ class GeneticAlgorithm {
 		size_t genesSize;
 		std::vector<Chromosome*> population;
 	    size_t generations;
+        Graph graph;
+        std::vector<int> bestSolution;
 
-		void createPopulation(Chromosome*(*heuristic)(Graph*), Graph* graph);
+		void createPopulation(Chromosome*(*heuristic)(Graph), Graph graph);
 		
 		Chromosome* chooseBestSolution(Chromosome* chromosome1, Chromosome* chromosome2);
 		
@@ -31,17 +33,20 @@ class GeneticAlgorithm {
 		static Chromosome* rouletteWheelSelection(std::vector<Chromosome*> population); 
 		
 	public:
-		GeneticAlgorithm(size_t populationSize, size_t genesSize, size_t generations):
+		GeneticAlgorithm(Graph& graph, size_t populationSize, size_t genesSize, size_t generations):
         				populationSize(populationSize), genesSize(genesSize),
-                        generations(generations), population(populationSize, nullptr) {}                  
+                        generations(generations), population(populationSize, nullptr),
+                        graph(graph) {}                  
 
 		~GeneticAlgorithm();
+        Graph getGraph();
 		std::vector<Chromosome*> getPopulation();     
 		size_t getPopulationSize();    
 		size_t getGenesSize();
 		size_t getGenerations();   
-		       
-		Chromosome* run(size_t generations, Chromosome*(*heuristic)(Graph*), Graph* graph);
+        std::vector<int> getBestSolution();		      
+
+		void run(size_t generations, Chromosome*(*heuristic)(Graph));
 };	
 
 #endif

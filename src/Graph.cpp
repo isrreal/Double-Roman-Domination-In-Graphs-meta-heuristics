@@ -145,10 +145,9 @@ void Graph::deleteVertex(size_t vertex) {
 std::ostream& operator<< (std::ostream& os, const Graph& graph) {
     for (const auto& pair : graph.adjList) {
         size_t vertex = pair.first;  
-        const auto& neighbors = pair.second;  
 
         os << vertex << " ----> ";
-        for (const auto& neighbor : neighbors) 
+        for (const auto& neighbor : pair.second) 
             os << neighbor << " ";  
         os << std::endl;
     }

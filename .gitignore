@@ -1,4 +1,14 @@
+<<<<<<< HEAD
 *.gch
 *.swp
 /obj
+=======
+# Ignorar arquivos .gch
+obj/*.gch
+
+# Ignorar arquivos de swap do Vim
+src/*.swp
+
+# Ignorar diretório app
+>>>>>>> 10c39c39f68c9799befb2dbc11f741f1988007b7
 app/

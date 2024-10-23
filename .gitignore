@@ -1,0 +1,8 @@
+# Ignorar arquivos .gch
+obj/*.gch
+
+# Ignorar arquivos de swap do Vim
+src/*.swp
+
+# Ignorar diretório app
+app/

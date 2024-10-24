@@ -47,6 +47,7 @@ The type of Ant Colony Optimization proposed is based on two variants: **MAX-MIN
 2. Compile the code
    ```bash
    make
+   
 3. Run the code
-```bash
-  ./app graph_order edge_probability
+   ```bash
+     ./app graph_order edge_probability

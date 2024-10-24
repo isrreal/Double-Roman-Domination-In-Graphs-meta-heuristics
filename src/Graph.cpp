@@ -67,7 +67,15 @@ Graph::Graph(size_t order, bool isDirected, float probabilityOfEdge) {
 }
 
 Graph::Graph(size_t order, bool isDirected) {
-	this->order = order;
+    this->order = order;
+    this->isDirected = isDirected;
+}
+
+Graph::Graph(size_t order, bool isDirected, const std::string& filename) {
+	Graph temp = readGraph(filename);
+	this->adjList = temp.adjList;
+    this->order = temp.order;
+    this->size = temp.size;
     this->isDirected = isDirected;
 }
 

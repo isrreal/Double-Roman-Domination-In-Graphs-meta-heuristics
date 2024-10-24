@@ -7,6 +7,8 @@
 #include <list>
 #include <unordered_map>
 #include <queue>
+#include <sstream>
+#include <fstream>
 
 class Graph {
 private:
@@ -15,7 +17,7 @@ private:
     bool isDirected;  
     std::unordered_map<size_t, std::list<size_t>> adjList;
     void addEdge(size_t source, size_t destination);
-    
+    Graph readGraph(const std::string& filename);
 public:	
 
     Graph(size_t order, bool isDirected, float probabilityOfEdge);	

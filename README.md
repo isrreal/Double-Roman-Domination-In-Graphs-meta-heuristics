@@ -1,4 +1,4 @@
-# What is a meta-heuritic?
+# What is a meta-heuristic?
 A meta-heuristic is a general exploration method, often stochastic, that applies similarly to various different combinatorial optimization problems. It typically begins with any feasible solution and iteratively improves it over several iterations until a stopping criterion is met. Examples of meta-heuristics include Genetic Algorithms and Ant Colony Optimization.
 
 

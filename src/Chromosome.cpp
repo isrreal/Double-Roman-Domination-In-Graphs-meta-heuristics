@@ -1,7 +1,5 @@
 #include "Chromosome.hpp"
 
-Chromosome::~Chromosome() {}
-
 Chromosome::Chromosome(std::vector<int> genes) {
 	this->genesSize = genes.size();
 	this->genes = genes;

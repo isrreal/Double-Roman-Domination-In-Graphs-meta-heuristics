@@ -21,6 +21,7 @@ private:
 public:	
 
     Graph(size_t order, bool isDirected, float probabilityOfEdge);	
+    Graph(size_t order, bool isDirected, const std::string& filename);
     Graph(size_t order, bool isDirected);	
     Graph(const Graph& graph);
     Graph();

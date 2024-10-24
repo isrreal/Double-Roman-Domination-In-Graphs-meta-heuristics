@@ -44,7 +44,6 @@ Graph::Graph(size_t order, bool isDirected, const std::string& filename) {
     }
 
     std::string line;
-    size_t order = 0, size = 0;
     int source = 0, destination = 0;
 
     std::getline(file, line);

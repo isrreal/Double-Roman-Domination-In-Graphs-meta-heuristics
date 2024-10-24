@@ -1,36 +1,5 @@
 #include "Graph.hpp"
 
-Graph readGraph(const std::string& filename) {
-    std::ifstream file(filename, std::fstream::in);
-    
-    if (!file) {
-        std::cerr << "Error opening the file!" << std::endl;
-        throw std::runtime_error("File not found");
-    }
-
-    std::string line;
-    size_t order = 0, size = 0;
-    int source = 0, destination = 0;
-
-    // Lê a primeira linha contendo a ordem e o tamanho do grafo
-    std::getline(file, line);
-    std::stringstream ss(line);
-    ss >> order >> size;
-
-    // Inicializa o grafo com a ordem e define como não-direcionado (ou true se for direcionado)
-    Graph graph(order, false); 
-
-    // Lê as arestas do grafo e atualiza a lista de adjacências
-    while (std::getline(file, line)) {
-        std::stringstream ssEdges(line);
-        while (ssEdges >> source >> destination) {
-            graph.addEdge(source, destination);
-        }
-    }
-
-    return graph; 
-}
-
 Graph::Graph(size_t order, bool isDirected, float probabilityOfEdge) {
     this->isDirected = isDirected;
     this->order = order;
@@ -66,17 +35,31 @@ Graph::Graph(size_t order, bool isDirected, float probabilityOfEdge) {
     }
 }
 
-Graph::Graph(size_t order, bool isDirected) {
-    this->order = order;
-    this->isDirected = isDirected;
-}
-
 Graph::Graph(size_t order, bool isDirected, const std::string& filename) {
-	Graph temp = readGraph(filename);
-	this->adjList = temp.adjList;
-    this->order = temp.order;
-    this->size = temp.size;
-    this->isDirected = isDirected;
+	std::ifstream file(filename, std::fstream::in);
+    
+    if (!file) {
+        std::cerr << "Error opening the file!" << std::endl;
+        throw std::runtime_error("File not found");
+    }
+
+    std::string line;
+    size_t order = 0, size = 0;
+    int source = 0, destination = 0;
+
+    std::getline(file, line);
+    std::stringstream ss(line);
+    ss >> order >> size;
+    
+    this->order = order;
+    this->size = size;
+
+    while (std::getline(file, line)) {
+        std::stringstream ssEdges(line);
+        while (ssEdges >> source >> destination) {
+            addEdge(source, destination);
+        }
+    }
 }
 
 Graph::Graph(const Graph& graph) {

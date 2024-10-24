@@ -4,7 +4,7 @@ A meta-heuristic is a general exploration method, often stochastic, that applies
 
 # Meta-heuristic Algorithms for Double Roman Domination Problem
 
-In this project, we implement two algorithms based on meta-heuristics for solving the Double Roman Domination Problem, inspired by the paper **Meta-heuristic Algorithms for Double Roman Domination Problem**. These algorithms are based on Genetic Algorithms (see Section 2) and Ant Colony Optimization (see Section 3).
+In this project, we implement two algorithms based on meta-heuristics for solving the Double Roman Domination Problem, inspired by the paper **Meta-heuristic Algorithms for Double Roman Domination Problem**. These algorithms are based on Genetic Algorithms and Ant Colony Optimization.
 
 ## Genetic Algorithm
 
@@ -42,7 +42,7 @@ The type of Ant Colony Optimization proposed is based on two variants: **MAX-MIN
 
 1. Clone the repository
    ```bash
-   git clone https://github.com/yourusername/2rdf.git
+   git clone https://github.com/isrreal/Double-Roman-Domination-In-Graphs-meta-heuristics.git
 
 2. Compile the code
    ```bash

@@ -283,11 +283,15 @@ void GeneticAlgorithm::run(size_t generations, Chromosome*(*heuristic)(Graph)) {
 
    this->createPopulation(heuristic, graph);
 
-   Chromosome* bestSolution = nullptr;
+   Chromosome* currentBestSolution = this->tournamentSelection(this->population);                                         
+   Chromosome* bestSolution = currentBestSolution;
 
    for (size_t i = 0; i < generations; ++i) {        
-    	bestSolution = this->tournamentSelection(this->population);                                         
-       	this->population = this->createNewPopulation();	
+       	this->population = this->createNewPopulation();
+        currentBestSolution = this->tournamentSelection(this->population);                                       
+
+        if (bestSolution->fitnessValue > currentBestSolution->fitnessValue)
+            bestSolution = currentBestSolution; 
    }
 
     this->bestSolution = bestSolution->genes;

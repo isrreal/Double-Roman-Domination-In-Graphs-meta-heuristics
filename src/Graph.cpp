@@ -35,8 +35,9 @@ Graph::Graph(size_t order, bool isDirected, float probabilityOfEdge) {
     }
 }
 
-Graph::Graph(size_t order, bool isDirected, const std::string& filename) {
-	std::ifstream file(filename, std::fstream::in);
+Graph::Graph(const std::string& filename, bool isDirected) {
+	this->isDirected = isDirected;
+   	std::ifstream file(filename, std::fstream::in);
     
     if (!file) {
         std::cerr << "Error opening the file!" << std::endl;
@@ -44,21 +45,32 @@ Graph::Graph(size_t order, bool isDirected, const std::string& filename) {
     }
 
     std::string line;
-    int source = 0, destination = 0;
+    size_t source = 0, destination = 0;
 
-    std::getline(file, line);
-    std::stringstream ss(line);
-    ss >> order >> size;
-    
-    this->order = order;
-    this->size = size;
+    // Lê a primeira linha para obter order e size
+    if (std::getline(file, line)) {
+        std::stringstream ss(line);
+        ss >> this->order >> this->size; // Captura o número de vértices e arestas
+    }
 
-    while (std::getline(file, line)) {
+    // Inicializa a lista de adjacência para cada vértice
+    for (size_t i = 0; i < order; ++i) {
+        adjList[i] = {};
+    }
+
+    // Lê as arestas restantes
+    while (std::getline(file, line) && (adjList.size() < size)) {
         std::stringstream ssEdges(line);
+        
         while (ssEdges >> source >> destination) {
             addEdge(source, destination);
+            // Verifica se o número de arestas já atingiu o tamanho desejado
+            if (adjList.size() >= size) break;
         }
     }
+    
+    // addEdge increments size a value a twice 
+    this->size = size / 2;
 }
 
 Graph::Graph(const Graph& graph) {

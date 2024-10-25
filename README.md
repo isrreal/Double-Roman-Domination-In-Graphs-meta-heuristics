@@ -43,11 +43,31 @@ The type of Ant Colony Optimization proposed is based on two variants: **MAX-MIN
 1. Clone the repository
    ```bash
    git clone https://github.com/isrreal/Double-Roman-Domination-In-Graphs-meta-heuristics.git
+2. Edit the file "graph.txt":
 
-2. Compile the code
+   The `graph.txt` file should specify the **order** (number of vertices) and the **size** (number of edges) of the graph, followed by the list of edges. Each line or block describes an edge between two vertices.
+
+   - The first line contains two numbers:
+     - `order_of_graph`: the number of vertices in the graph.
+     - `size_of_graph`: the number of edges in the graph.
+   
+   - The following lines list pairs of vertices that represent the graph's edges. Each pair of numbers indicates a connection between two vertices.
+
+   Example `graph.txt`
+
+   The following content represents a graph with 28 vertices and 42 edges.
+
+      ```plaintext
+      28 42
+      0 8  0 14  0 26  1 6  1 9  1 20  2 4  2 15  2 27  3 7  3 8  3 12  4 5
+      4 16  5 18  5 21  6 10  6 24  7 15  7 24  8 25  9 17  9 25  10 13  10 14
+      11 13  11 17  11 27  12 19  12 21  13 22  14 15  16 17  16 26  18 19  18 20
+      19 22  20 23  21 23  22 23  24 25  26 27
+
+3. Compile the code
    ```bash
    make
    
-3. Run the code
+4. Run the code
    ```bash
-     ./app graph_order edge_probability
+     ./app

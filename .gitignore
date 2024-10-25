@@ -9,9 +9,3 @@ obj/*.gch
 # Ignorar arquivos de swap do Vim
 src/*.swp
 
-<<<<<<< HEAD
-# Ignorar diretório app
->>>>>>> 10c39c39f68c9799befb2dbc11f741f1988007b7
-
-=======
->>>>>>> 53240a4 (.gitignore updated)

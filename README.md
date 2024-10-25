@@ -4,7 +4,8 @@ A meta-heuristic is a general exploration method, often stochastic, that applies
 
 # Meta-heuristic Algorithms for Double Roman Domination Problem
 
-In this project, we implement two algorithms based on meta-heuristics for solving the Double Roman Domination Problem, inspired by the paper **Meta-heuristic Algorithms for Double Roman Domination Problem**. These algorithms are based on Genetic Algorithms and Ant Colony Optimization.
+In this project, we implement two algorithms based on meta-heuristics for solving the Double Roman Domination Problem, inspired by the paper [**Meta-heuristic Algorithms for Double Roman Domination Problem**](https://doi.org/10.1016/j.asoc.2024.111306).
+ These algorithms are based on Genetic Algorithms and Ant Colony Optimization.
 
 ## Genetic Algorithm
 

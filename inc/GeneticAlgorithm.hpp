@@ -36,7 +36,7 @@ class GeneticAlgorithm {
 		GeneticAlgorithm(Graph& graph, size_t populationSize, size_t genesSize, size_t generations):
         				populationSize(populationSize), genesSize(genesSize),
                         generations(generations), population(populationSize, nullptr),
-                        graph(graph) {}                  
+                        graph(graph) {}                 
 
 		~GeneticAlgorithm();
         Graph getGraph();

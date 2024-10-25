@@ -7,8 +7,8 @@
  */
  
 GeneticAlgorithm::~GeneticAlgorithm() {
-    for (size_t i = populationSize; i > 0; --i)
-        delete population[i];
+    for (auto& chromosome : population)
+        delete chromosome;
     population.clear();
 }
  
@@ -258,7 +258,7 @@ std::vector<Chromosome*> GeneticAlgorithm::createNewPopulation() {
     Chromosome* selected2 = nullptr;
     Chromosome* offspring = nullptr;
 
-    while (newPopulation.size() < this->populationSize) {
+    while (newPopulation.size() < this->population.size()) {
         selected1 = this->selectionMethod(tournamentSelection);
         selected2 = this->selectionMethod(rouletteWheelSelection);
        
@@ -282,6 +282,7 @@ std::vector<Chromosome*> GeneticAlgorithm::createNewPopulation() {
 void GeneticAlgorithm::run(size_t generations, Chromosome*(*heuristic)(Graph)) { 
 
    this->createPopulation(heuristic, graph);
+
    Chromosome* currentBestSolution = this->tournamentSelection(this->population);                                         
    Chromosome* bestSolution = currentBestSolution;
 
@@ -292,5 +293,6 @@ void GeneticAlgorithm::run(size_t generations, Chromosome*(*heuristic)(Graph)) {
         if (bestSolution->fitnessValue > currentBestSolution->fitnessValue)
             bestSolution = currentBestSolution; 
    }
+
     this->bestSolution = bestSolution->genes;
 }

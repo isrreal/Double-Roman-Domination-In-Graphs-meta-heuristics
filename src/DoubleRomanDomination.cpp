@@ -8,7 +8,7 @@
  */
 DoubleRomanDomination::~DoubleRomanDomination() {
     delete this->geneticAlgorithm;
-    delete this->ACO;
+    //delete this->ACO;
 }
 
 /**

@@ -10,7 +10,7 @@
 
 class DoubleRomanDomination {
 	private:
-		Graph graph;
+    	Graph graph;
     	GeneticAlgorithm* geneticAlgorithm;
     	AntColonyOptimization* ACO;
 		std::vector<int> solution;

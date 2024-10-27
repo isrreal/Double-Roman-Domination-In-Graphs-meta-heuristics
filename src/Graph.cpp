@@ -93,21 +93,23 @@ void Graph::addEdge(size_t source, size_t destination) {
     }
 }
 
-bool Graph::edgeExists(size_t u, size_t v) {
-    return std::find(adjList[u].begin(), adjList[u].end(), v) != adjList[u].end();
+bool Graph::edgeExists(size_t u, size_t v) const {
+    return std::find(adjList.at(u).begin(), adjList.at(u).end(), v) != adjList.at(u).end();
 }
 
-size_t Graph::getVertexDegree(size_t vertex) { return this->adjList[vertex].size(); }
+size_t Graph::getVertexDegree(size_t vertex) const {
+    return const_cast<const std::unordered_map<size_t, std::list<size_t>>&>(adjList).at(vertex).size();
+}
 
-size_t Graph::getSize() { return this->size; }
+size_t Graph::getSize() const { return this->size; }
 
-size_t Graph::getOrder() { return this->order; }
+size_t Graph::getOrder() const { return this->order; }
 
-std::unordered_map<size_t, std::list<size_t>> Graph::getAdjacencyList() { return this->adjList; }
+std::unordered_map<size_t, std::list<size_t>> Graph::getAdjacencyList() const { return this->adjList; }
 
-std::list<size_t> Graph::getAdjacencyList(size_t vertex) { return this->adjList[vertex]; }
+const std::list<size_t>& Graph::getAdjacencyList(size_t vertex) const { return this->adjList.at(vertex); }
 
-bool Graph::vertexExists(size_t vertex) { return adjList.find(vertex) != adjList.end(); }
+bool Graph::vertexExists(size_t vertex) const { return adjList.find(vertex) != adjList.end(); }
 
 /*
 void Graph::breadthFirstSearch() {

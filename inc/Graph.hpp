@@ -27,17 +27,17 @@ public:
     Graph();
     ~Graph() = default;
  
-    size_t getSize();
-    size_t getOrder();
-    size_t getVertexDegree(size_t vertex);
+    size_t getSize() const;
+    size_t getOrder() const;
+    size_t getVertexDegree(size_t vertex) const;
     
-    std::unordered_map<size_t, std::list<size_t>> getAdjacencyList();
+    std::unordered_map<size_t, std::list<size_t>> getAdjacencyList() const;
     
-    std::list<size_t> getAdjacencyList(size_t vertex);
+    const std::list<size_t>& getAdjacencyList(size_t vertex) const;
     
-    bool edgeExists(size_t u, size_t v);
+    bool edgeExists(size_t u, size_t v) const;
     
-    bool vertexExists(size_t vertex);	
+    bool vertexExists(size_t vertex) const;	
 
     void breadthFirstSearch();  
     

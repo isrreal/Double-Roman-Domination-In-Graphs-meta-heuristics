@@ -68,7 +68,10 @@ The type of Ant Colony Optimization proposed is based on two variants: **MAX-MIN
 3. Compile the code
    ```bash
    make
+   ```
    
 4. Run the code
    ```bash
-     ./app
+     # population_size generations (Genetic Algorithm parameters); number_of_ants iterations (ACO parameters)
+     ./app population_size generations number_of_ants iterations
+   ```

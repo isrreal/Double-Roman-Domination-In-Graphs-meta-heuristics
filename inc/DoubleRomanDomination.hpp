@@ -17,19 +17,19 @@ class DoubleRomanDomination {
         size_t gamma2rGeneticAlgorithm;		
         size_t gamma2rACO;        
 	public:
-		DoubleRomanDomination(Graph& graph, size_t populationSize, size_t genesSize, size_t generations,
+		DoubleRomanDomination(Graph& graph, size_t populationSize, size_t genesSize, uint8_t heuristic, size_t generations,
                 size_t numberOfAnts, size_t iterations) 
     			: graph(graph), gamma2rGeneticAlgorithm(0), gamma2rACO(0),   
                 geneticAlgorithm(new GeneticAlgorithm(graph, populationSize, genesSize, generations)),
     		    ACO(new AntColonyOptimization(graph, iterations, numberOfAnts)) {
-                    this->runGeneticAlgorithm();                    
+                    this->runGeneticAlgorithm(heuristic);                    
                     this->runACO();
                 }
 
         ~DoubleRomanDomination();
         Graph& getGraph();
         std::vector<int> getSolution();
-        void runGeneticAlgorithm();
+        void runGeneticAlgorithm(uint8_t heuristic);
         void runACO();
         
         size_t getGamma2rGeneticAlgorithm();

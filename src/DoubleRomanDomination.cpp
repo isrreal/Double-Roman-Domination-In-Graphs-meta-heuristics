@@ -8,7 +8,7 @@
  */
 DoubleRomanDomination::~DoubleRomanDomination() {
     delete this->geneticAlgorithm;
-    //delete this->ACO;
+    delete this->ACO;
 }
 
 /**
@@ -41,8 +41,9 @@ size_t DoubleRomanDomination::getGamma2rACO() {
  * @return size_t The calculated double Roman domination number.
  */
  
-void DoubleRomanDomination::runGeneticAlgorithm() {
-    this->geneticAlgorithm->run(geneticAlgorithm->getGenerations(), heuristic1);
+void DoubleRomanDomination::runGeneticAlgorithm(uint8_t heuristic) {                                                                                                                                           
+    auto selectedHeuristic = (heuristic == 2) ? heuristic2 : (heuristic == 3) ? heuristic3 : heuristic1;
+    this->geneticAlgorithm->run(geneticAlgorithm->getGenerations(), selectedHeuristic);
 
     solution = this->geneticAlgorithm->getBestSolution();
     std::for_each(solution.begin(), solution.end(), [&](int element) {

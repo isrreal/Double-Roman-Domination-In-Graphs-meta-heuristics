@@ -72,6 +72,15 @@ The type of Ant Colony Optimization proposed is based on two variants: **MAX-MIN
    
 4. Run the code
    ```bash
-     # population_size generations (Genetic Algorithm parameters); number_of_ants iterations (ACO parameters)
-     ./app population_size generations number_of_ants iterations
-   ```
+   # Syntax:
+   # ./app <population_size> <generations> <chromosome_creation_heuristic> <number_of_ants> <iterations>
+   #
+   # Parameters:
+   #   population_size                - Size of the population for the Genetic Algorithm
+   #   generations                    - Number of generations to run in the Genetic Algorithm
+   #   chromosome_creation_heuristic  - Heuristic for creating chromosomes [1, 2, or 3]. Default is 1.
+   #   number_of_ants                 - Number of ants for the Ant Colony Optimization (ACO)
+   #   iterations                     - Number of iterations for the ACO
+
+   ./app <population_size> <generations> <chromosome_creation_heuristic> <number_of_ants> <iterations>
+

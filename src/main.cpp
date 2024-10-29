@@ -12,6 +12,11 @@ int main(int argc, char** argv) {
                 std::stoi(argv[4]), std::stoi(argv[5])); 
         std::cout << "Double Roman Domination Number computed by Genetic Algorithm: " << drd->getGamma2rGeneticAlgorithm() << std::endl;
         std::cout << "Double Roman Domination Number computed by ACO: " << drd->getGamma2rACO() << std::endl;
+
+        std::cout << "\nDouble Roman Domination Function: \n";
+        for (const auto& it: drd->getSolution())
+           std::cout << it << " ";
+        std::cout << std::endl;
         delete drd;
     }
 

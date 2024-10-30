@@ -235,13 +235,24 @@ Chromosome* GeneticAlgorithm::crossOver(Chromosome* chromosome1, Chromosome* chr
  
  
 Chromosome* GeneticAlgorithm::feasibilityCheck(Chromosome* chromosome) {	
-	for (auto& gene: chromosome->genes) {
-		for (auto& adjacency: graph.getAdjacencyList(gene)) {
-			if ((gene == 0) &&  (chromosome->genes[adjacency] == 3)) 
-				gene = 2;	
-		}
-	}
-	return chromosome;
+    bool hasNeighborWith3 = false;                                                                                                                                                                             
+
+    for (size_t i = 0; i < genesSize; ++i) {
+        if (chromosome->genes[i] == 0) {
+            hasNeighborWith3 = false;
+            for (auto& neighbor : this->graph.getAdjacencyList(i)) {
+                if (chromosome->genes[neighbor] == 3) {
+                    hasNeighborWith3 = true;
+                    break; 
+                }
+            }
+
+            if (!hasNeighborWith3) 
+                chromosome->genes[i] = 2;
+        }
+    }
+
+    return chromosome;	
 }
 
 /**

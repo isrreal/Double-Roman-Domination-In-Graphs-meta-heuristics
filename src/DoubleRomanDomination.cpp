@@ -6,6 +6,7 @@
  * 
  * Frees the memory allocated for the genetic algorithm and graph objects.
  */
+ 
 DoubleRomanDomination::~DoubleRomanDomination() {
     delete this->geneticAlgorithm;
     delete this->ACO;
@@ -14,35 +15,60 @@ DoubleRomanDomination::~DoubleRomanDomination() {
 /**
  * @brief Gets the graph used in the double Roman domination algorithm.
  * 
- * @return Graph* Pointer to the graph object.
+ * @return Graph& Reference to the graph object.
  */
+ 
 Graph& DoubleRomanDomination::getGraph() {
     return this->graph;
 }
 
+/**
+ * @brief Retrieves the solution obtained from the ACO algorithm.
+ * 
+ * @return std::vector<int> The solution vector from ACO.
+ */
+ 
 std::vector<int> DoubleRomanDomination::getSolutionACO() {
 	return this->solutionACO;
 }
 
+/**
+ * @brief Retrieves the solution obtained from the genetic algorithm.
+ * 
+ * @return std::vector<int> The solution vector from the genetic algorithm.
+ */
+ 
 std::vector<int> DoubleRomanDomination::getSolutionGeneticAlgorithm() {
 	return this->solutionGeneticAlgorithm;
 }
 
+/**
+ * @brief Retrieves the double Roman domination number calculated by the genetic algorithm.
+ * 
+ * @return size_t The calculated gamma2R value.
+ */
+ 
 size_t DoubleRomanDomination::getGamma2rGeneticAlgorithm() {
     return this->gamma2rGeneticAlgorithm;
 }
 
+/**
+ * @brief Retrieves the double Roman domination number calculated by the ACO algorithm.
+ * 
+ * @return size_t The calculated gamma2R value.
+ */
+ 
 size_t DoubleRomanDomination::getGamma2rACO() {
     return this->gamma2rACO;
 }
 
 /**
- * @brief Runs the genetic algorithm and calculates the double Roman domination number (gamma2R).
+ * @brief Runs the genetic algorithm to compute the double Roman domination number (gamma2R).
  * 
- * Executes the genetic algorithm with predefined heuristics and computes the total sum of genes
- * in the resulting chromosome to calculate gamma2R.
+ * Executes the genetic algorithm using a specified heuristic function and computes the sum of genes 
+ * in the best chromosome solution, storing it as gamma2R.
  * 
- * @return size_t The calculated double Roman domination number.
+ * @param heuristic The heuristic identifier (1, 2, or 3) to select the appropriate heuristic function.
  */
  
 void DoubleRomanDomination::runGeneticAlgorithm(uint8_t heuristic) {                                                                                                                                           
@@ -55,6 +81,13 @@ void DoubleRomanDomination::runGeneticAlgorithm(uint8_t heuristic) {
     });
 }
 
+
+/**
+ * @brief Runs the ACO algorithm to compute the double Roman domination number (gamma2R).
+ * 
+ * Executes the ACO algorithm and computes the sum of genes in the best solution, storing it as gamma2R.
+ */
+ 
 void DoubleRomanDomination::runACO() {
    this->ACO->run();
    
@@ -66,14 +99,15 @@ void DoubleRomanDomination::runACO() {
 }
 
 /**
- * @brief A heuristic function that generates an initial chromosome solution for double Roman domination.
+ * @brief Generates an initial chromosome solution for double Roman domination using heuristic 1.
  * 
- * This heuristic randomly selects vertices and assigns them a value of 3, while updating their neighbors 
- * with a value of 0. The adjacency list of the choosen vertex is then deleted.
+ * This heuristic randomly selects vertices, assigning each selected vertex a value of 3, and sets 
+ * neighbors' values to 0. The adjacency list of each selected vertex is then deleted.
  * 
- * @param  graph used to create the chromosome.
+ * @param graph Graph object used to create the chromosome.
  * @return Chromosome The generated chromosome solution.
  */
+ 
 Chromosome DoubleRomanDomination::heuristic1(Graph graph) {
     Chromosome solution(Chromosome(graph.getOrder()));
     std::random_device randomNumber;
@@ -106,14 +140,15 @@ Chromosome DoubleRomanDomination::heuristic1(Graph graph) {
 }
 
 /**
- * @brief A second heuristic function that generates an initial chromosome solution for double Roman domination.
+ * @brief Generates an initial chromosome solution for double Roman domination using heuristic 2.
  * 
- * This heuristic selects vertices randomly and assigns them values, updating neighbors accordingly and
- * handling vertices with no neighbors by assigning a value of 2.
+ * This heuristic randomly selects vertices, assigns values based on vertex connectivity, and handles 
+ * isolated vertices by assigning a value of 2.
  * 
- * @param graph Pointer to the graph used to create the chromosome.
- * @return Chromosome* The generated chromosome solution.
+ * @param graph Graph object used to create the chromosome.
+ * @return Chromosome The generated chromosome solution.
  */
+ 
 Chromosome DoubleRomanDomination::heuristic2(Graph graph) {
     Chromosome solution(Chromosome(graph.getOrder()));
     std::random_device randomNumber;
@@ -150,14 +185,15 @@ Chromosome DoubleRomanDomination::heuristic2(Graph graph) {
 }
 
 /**
- * @brief A third heuristic function that generates an initial chromosome solution for double Roman domination.
+ * @brief Generates an initial chromosome solution for double Roman domination using heuristic 3.
  * 
- * This heuristic sorts vertices by degree in descending order, then selects vertices with the highest degree
- * for assignment while updating their neighbors.
+ * This heuristic sorts vertices by degree in descending order, selects the highest degree vertices, 
+ * and assigns values while updating their neighbors.
  * 
- * @param graph Pointer to the graph used to create the chromosome.
- * @return Chromosome* The generated chromosome solution.
+ * @param graph Graph object used to create the chromosome.
+ * @return Chromosome The generated chromosome solution.
  */
+ 
 Chromosome DoubleRomanDomination::heuristic3(Graph graph) {
     Chromosome solution(Chromosome(graph.getOrder()));
     std::vector<size_t> sortedVertices(graph.getOrder());

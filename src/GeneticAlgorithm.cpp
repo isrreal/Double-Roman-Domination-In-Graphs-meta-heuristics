@@ -245,18 +245,18 @@ Chromosome GeneticAlgorithm::feasibilityCheck(Chromosome& chromosome) {
  * @return std::vector<Chromosome*> A new population of Chromosomes.
  */
 
-std::vector<Chromosome> GeneticAlgorithm::createNewPopulation() {
-    std::vector<Chromosome> newPopulation;
+std::vector<Chromosome>& GeneticAlgorithm::createNewPopulation() {
+    this->population.clear();
 
-    while (newPopulation.size() < this->population.size()) {
+    while (this->population.size() < populationSize) {
         Chromosome selected1 = this->selectionMethod(tournamentSelection);
         Chromosome selected2 = this->selectionMethod(rouletteWheelSelection);
         Chromosome offspring = this->crossOver(selected1, selected2, nullptr);
 
-        newPopulation.push_back(offspring);
+        this->population.push_back(offspring);
     }
 
-    return newPopulation;
+    return population;
 }
 
 /**

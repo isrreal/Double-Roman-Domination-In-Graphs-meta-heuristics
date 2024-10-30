@@ -24,7 +24,7 @@ class GeneticAlgorithm {
                 
 		Chromosome feasibilityCheck(Chromosome& chromosome);
 		
-		std::vector<Chromosome> createNewPopulation();
+		std::vector<Chromosome>& createNewPopulation();
 		
         Chromosome selectionMethod(Chromosome(*selectionHeuristic)(std::vector<Chromosome>)); 
         	

@@ -20,8 +20,12 @@ Graph& DoubleRomanDomination::getGraph() {
     return this->graph;
 }
 
-std::vector<int> DoubleRomanDomination::getSolution() {
-	return this->solution;
+std::vector<int> DoubleRomanDomination::getSolutionACO() {
+	return this->solutionACO;
+}
+
+std::vector<int> DoubleRomanDomination::getSolutionGeneticAlgorithm() {
+	return this->solutionGeneticAlgorithm;
 }
 
 size_t DoubleRomanDomination::getGamma2rGeneticAlgorithm() {
@@ -45,8 +49,8 @@ void DoubleRomanDomination::runGeneticAlgorithm(uint8_t heuristic) {
     auto selectedHeuristic = (heuristic == 2) ? heuristic2 : (heuristic == 3) ? heuristic3 : heuristic1;
     this->geneticAlgorithm->run(geneticAlgorithm->getGenerations(), selectedHeuristic);
 
-    solution = this->geneticAlgorithm->getBestSolution();
-    std::for_each(solution.begin(), solution.end(), [&](int element) {
+    solutionGeneticAlgorithm = this->geneticAlgorithm->getBestSolution();
+    std::for_each(solutionGeneticAlgorithm.begin(), solutionGeneticAlgorithm.end(), [&](int element) {
         this->gamma2rGeneticAlgorithm += element;
     });
 }
@@ -54,9 +58,9 @@ void DoubleRomanDomination::runGeneticAlgorithm(uint8_t heuristic) {
 void DoubleRomanDomination::runACO() {
    this->ACO->run();
    
-   solution = this->ACO->getBestSolution();
+   solutionACO = this->ACO->getBestSolution();
 
-   std::for_each(solution.begin(), solution.end(), [&](int element) {
+   std::for_each(solutionACO.begin(), solutionACO.end(), [&](int element) {
       this->gamma2rACO += element;
    });
 }

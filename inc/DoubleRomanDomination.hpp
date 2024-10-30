@@ -13,7 +13,8 @@ class DoubleRomanDomination {
     	Graph graph;
     	GeneticAlgorithm* geneticAlgorithm;
     	AntColonyOptimization* ACO;
-		std::vector<int> solution;
+		std::vector<int> solutionACO;
+        std::vector<int> solutionGeneticAlgorithm;
         size_t gamma2rGeneticAlgorithm;		
         size_t gamma2rACO;        
 	public:
@@ -28,12 +29,13 @@ class DoubleRomanDomination {
 
         ~DoubleRomanDomination();
         Graph& getGraph();
-        std::vector<int> getSolution();
-        void runGeneticAlgorithm(uint8_t heuristic);
-        void runACO();
-        
+        std::vector<int> getSolutionACO();
+        std::vector<int> getSolutionGeneticAlgorithm();
         size_t getGamma2rGeneticAlgorithm();
         size_t getGamma2rACO();
+
+        void runGeneticAlgorithm(uint8_t heuristic);
+        void runACO();
 
         static Chromosome* heuristic1(Graph graph);
         static Chromosome* heuristic2(Graph graph);

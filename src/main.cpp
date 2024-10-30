@@ -13,14 +13,14 @@ int main(int argc, char** argv) {
         std::cout << "Double Roman Domination Number computed by Genetic Algorithm: " << drd->getGamma2rGeneticAlgorithm() << std::endl;
         std::cout << "Double Roman Domination Number computed by ACO: " << drd->getGamma2rACO() << std::endl;
 
-        std::cout << "\nDouble Roman Domination Function: " << std::endl;
-        std::cout << "ACO solution: " << std::endl;
-        for (const auto& it: drd->getSolutionACO())
+        std::cout << "\nGenetic Algorithm solution: " << std::endl;
+        for (const auto& it: drd->getSolutionGeneticAlgorithm())
            std::cout << it << " ";
         std::cout << std::endl;
 
-        std::cout << "Genetic Algorithm solution: " << std::endl;
-        for (const auto& it: drd->getSolutionGeneticAlgorithm())
+        std::cout << "\nDouble Roman Domination Function: \n" << std::endl;
+        std::cout << "ACO solution: " << std::endl;
+        for (const auto& it: drd->getSolutionACO())
            std::cout << it << " ";
         std::cout << std::endl;
 

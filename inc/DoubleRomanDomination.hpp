@@ -37,8 +37,8 @@ class DoubleRomanDomination {
         void runGeneticAlgorithm(uint8_t heuristic);
         void runACO();
 
-        static Chromosome* heuristic1(Graph graph);
-        static Chromosome* heuristic2(Graph graph);
-        static Chromosome* heuristic3(Graph graph);   
+        static Chromosome heuristic1(Graph graph);
+        static Chromosome heuristic2(Graph graph);
+        static Chromosome heuristic3(Graph graph);   
 };
 #endif

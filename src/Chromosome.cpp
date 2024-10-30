@@ -22,11 +22,11 @@ Chromosome::Chromosome(std::vector<int> firstHalf, std::vector<int> secondHalf) 
     this->fitnessValue = 0;
 }
 
-Chromosome::Chromosome(Chromosome* chromosome) {
-    this->genesSize = chromosome->genesSize;
-    this->genes = chromosome->genes;
-    this->indexRemove = chromosome->indexRemove;
-    this->fitnessValue = chromosome->fitnessValue;
+Chromosome::Chromosome(const Chromosome& chromosome) {
+    this->genesSize = chromosome.genesSize;
+    this->genes = chromosome.genes;
+    this->indexRemove = chromosome.indexRemove;
+    this->fitnessValue = chromosome.fitnessValue;
 }
 
 std::ostream& operator<<(std::ostream& os, const Chromosome& chromosome) {

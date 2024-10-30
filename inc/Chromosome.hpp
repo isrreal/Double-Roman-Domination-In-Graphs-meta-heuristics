@@ -12,13 +12,15 @@ struct Chromosome {
     size_t indexRemove;
     size_t fitnessValue;
 	
+	Chromosome() = default;
+	
 	Chromosome(std::vector<int> genes);
 
 	Chromosome(size_t genesSize);
 
 	Chromosome(std::vector<int> primeiraMetade, std::vector<int> segundaMetade);
     
-    Chromosome(Chromosome* chromosome);
+    Chromosome(const Chromosome& chromosome);
         
 	~Chromosome() {};
 

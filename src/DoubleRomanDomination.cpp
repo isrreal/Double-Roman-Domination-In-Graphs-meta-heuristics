@@ -69,13 +69,13 @@ void DoubleRomanDomination::runACO() {
  * @brief A heuristic function that generates an initial chromosome solution for double Roman domination.
  * 
  * This heuristic randomly selects vertices and assigns them a value of 3, while updating their neighbors 
- * with a value of 0. The adjacency list of the chosen vertex is then deleted.
+ * with a value of 0. The adjacency list of the choosen vertex is then deleted.
  * 
- * @param graph Pointer to the graph used to create the chromosome.
- * @return Chromosome* The generated chromosome solution.
+ * @param  graph used to create the chromosome.
+ * @return Chromosome The generated chromosome solution.
  */
-Chromosome* DoubleRomanDomination::heuristic1(Graph graph) {
-    Chromosome* solution = new Chromosome(graph.getOrder());
+Chromosome DoubleRomanDomination::heuristic1(Graph graph) {
+    Chromosome solution(Chromosome(graph.getOrder()));
     std::random_device randomNumber;
     std::mt19937 seed(randomNumber());
     std::uniform_int_distribution<int> gap(0, graph.getOrder() - 1);
@@ -87,17 +87,17 @@ Chromosome* DoubleRomanDomination::heuristic1(Graph graph) {
         while (!graph.vertexExists(choosenVertex))
             choosenVertex = gap(seed);
 	    
-        solution->genes[choosenVertex] = 3;
+        solution.genes[choosenVertex] = 3;
         for (const auto& it: graph.getAdjacencyList(choosenVertex)) {
-            if (solution->genes[it] == -1)
-                solution->genes[it] = 0;
+            if (solution.genes[it] == -1)
+                solution.genes[it] = 0;
         }
 
         graph.deleteAdjacencyList(choosenVertex);
 
         if (graph.getOrder() == 1) {
             choosenVertex = graph.getAdjacencyList().begin()->first;
-            solution->genes[choosenVertex] = 3;
+            solution.genes[choosenVertex] = 3;
             graph.deleteVertex(choosenVertex);
         }
     }
@@ -114,8 +114,8 @@ Chromosome* DoubleRomanDomination::heuristic1(Graph graph) {
  * @param graph Pointer to the graph used to create the chromosome.
  * @return Chromosome* The generated chromosome solution.
  */
-Chromosome* DoubleRomanDomination::heuristic2(Graph graph) {
-    Chromosome* solution = new Chromosome(graph.getOrder());
+Chromosome DoubleRomanDomination::heuristic2(Graph graph) {
+    Chromosome solution(Chromosome(graph.getOrder()));
     std::random_device randomNumber;
     std::mt19937 seed(randomNumber());
     std::uniform_int_distribution<int> gap(0, graph.getOrder() - 1);
@@ -128,10 +128,10 @@ Chromosome* DoubleRomanDomination::heuristic2(Graph graph) {
         while (!graph.vertexExists(choosenVertex))
             choosenVertex = gap(seed);
 
-        solution->genes[choosenVertex] = 3;
+        solution.genes[choosenVertex] = 3;
         for (const auto& it: graph.getAdjacencyList(choosenVertex)) {
-            if (solution->genes[it] == -1)
-                solution->genes[it] = 0;
+            if (solution.genes[it] == -1)
+                solution.genes[it] = 0;
         }
 
         graph.deleteAdjacencyList(choosenVertex);
@@ -139,7 +139,7 @@ Chromosome* DoubleRomanDomination::heuristic2(Graph graph) {
         for (size_t i = 0; i < graphOrder; ++i) {
             if (graph.vertexExists(i)) {
                 if (graph.getVertexDegree(i) == 0) {
-                    solution->genes[i] = 2;
+                    solution.genes[i] = 2;
                     graph.deleteVertex(i);
                 }
             }
@@ -158,8 +158,8 @@ Chromosome* DoubleRomanDomination::heuristic2(Graph graph) {
  * @param graph Pointer to the graph used to create the chromosome.
  * @return Chromosome* The generated chromosome solution.
  */
-Chromosome* DoubleRomanDomination::heuristic3(Graph graph) {
-    Chromosome* solution = new Chromosome(graph.getOrder());
+Chromosome DoubleRomanDomination::heuristic3(Graph graph) {
+    Chromosome solution(Chromosome(graph.getOrder()));
     std::vector<size_t> sortedVertices(graph.getOrder());
     size_t graphOrder = graph.getOrder();
 
@@ -183,11 +183,11 @@ Chromosome* DoubleRomanDomination::heuristic3(Graph graph) {
 
         if (choosenVertex >= sortedVertices.size()) break;
 
-        solution->genes[sortedVertices[choosenVertex]] = 3;
+        solution.genes[sortedVertices[choosenVertex]] = 3;
 
         for (const auto& it : graph.getAdjacencyList(sortedVertices[choosenVertex])) {
-            if (solution->genes[it] == -1)
-                solution->genes[it] = 0;
+            if (solution.genes[it] == -1)
+                solution.genes[it] = 0;
         }
 
         graph.deleteAdjacencyList(sortedVertices[choosenVertex++]);
@@ -195,7 +195,7 @@ Chromosome* DoubleRomanDomination::heuristic3(Graph graph) {
         for (size_t i = 0; i < graphOrder; ++i) {
             if (graph.vertexExists(i)) {
                 if (graph.getVertexDegree(i) == 0) {
-                    solution->genes[i] = 2;
+                    solution.genes[i] = 2;
                     graph.deleteVertex(i);
                 }
             }

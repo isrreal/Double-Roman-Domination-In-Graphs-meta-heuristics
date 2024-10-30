@@ -183,11 +183,6 @@ Chromosome GeneticAlgorithm::crossOver(Chromosome& chromosome1, Chromosome& chro
    
    std::vector<int> x, y;
 
-  // while ((range1 == range2) || ((range2 - range1) == 1)) {
-    //    range1 = gap(seed);
-      //  range2 = gap(seed);
-  // }
-
    if (range1 > range2) 
         std::swap(range1, range2);
     
@@ -281,7 +276,7 @@ void GeneticAlgorithm::run(size_t generations, Chromosome(*heuristic)(Graph)) {
    Chromosome bestSolution = currentBestSolution;
 
    for (size_t i = 0; i < generations; ++i) {        
-       	this->population = this->createNewPopulation();
+       	this->population.swap(this->createNewPopulation());
         currentBestSolution = this->tournamentSelection(this->population);                                       
 
         if (bestSolution.fitnessValue > currentBestSolution.fitnessValue)

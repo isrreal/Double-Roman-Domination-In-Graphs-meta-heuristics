@@ -57,8 +57,9 @@ The type of Ant Colony Optimization proposed is based on two variants: **MAX-MIN
 
 3. **ReduceSolution**: Redundant vertices are removed from the current solution. A vertex $v$ is redundant if all vertices in its closed neighborhood $N[v]$ are dominated by other vertices in the solution.
 
-4. **ApplyRVNS**: This sub-routine randomly selects a vertex labeled 2 or 0 and unlabels it, updating the value to -1. The **ConstructSolution**, **ExtendSolution**, and **ReduceSolution** sub-routines are then reapplied, and the new solution's weight is compared to the previous one. If the new solution has a lower weight, it replaces the current solution.
-
+4. **RVNS (Random Variable Neighborhood Search)**: This function enhances the best result obtained from the ACO algorithm by exploring nearby solution spaces. RVNS increases the likelihood of finding a solution closer to the optimal one by modifying the solution in the following steps:
+    - The **DestroySolution** sub-routine randomly selects a vertex labeled 0 or 2 and also unlabeled it, setting its value to -1.
+    - **ConstructSolution**, **ExtendSolution**, and **ReduceSolution** are then reapplied to form a new solution, which is compared with the previous one. If the new solution has a lower weight, it replaces the current solution.
 
 
 ## How to Use

@@ -24,11 +24,6 @@ class DoubleRomanDomination {
     			: graph(graph), gamma2rGeneticAlgorithm(0), gamma2rACO(0),   
                 geneticAlgorithm(new GeneticAlgorithm(graph, populationSize, genesSize, generations)),
     		    ACO(new AntColonyOptimization(graph, iterations, numberOfAnts)) {    		       		
-    		    	std::cout << populationSize << std::endl;
-    		    	std::cout << generations << std::endl;
-    		    	std::cout << heuristic << std::endl;
-    		    	std::cout << numberOfAnts << std::endl;
-    		    	std::cout << iterations << std::endl;
                     this->runGeneticAlgorithm(heuristic);                    
                     this->runACO();
                 }

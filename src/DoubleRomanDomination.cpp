@@ -71,8 +71,17 @@ size_t DoubleRomanDomination::getGamma2rACO() {
  * @param heuristic The heuristic identifier (1, 2, or 3) to select the appropriate heuristic function.
  */
  
-void DoubleRomanDomination::runGeneticAlgorithm(uint8_t heuristic) {                                                                                                                                           
-    auto selectedHeuristic = (heuristic == 2) ? heuristic2 : (heuristic == 3) ? heuristic3 : heuristic1;
+void DoubleRomanDomination::runGeneticAlgorithm(short int heuristic) {    
+                                                                                                                                       
+    Chromosome (*selectedHeuristic)(Graph) = nullptr;
+
+    if (heuristic == 2) 
+    	selectedHeuristic = heuristic2;
+    else if (heuristic == 3) 
+        selectedHeuristic = heuristic3;
+    else 
+        selectedHeuristic = heuristic1;
+
     this->geneticAlgorithm->run(geneticAlgorithm->getGenerations(), selectedHeuristic);
 
     solutionGeneticAlgorithm = this->geneticAlgorithm->getBestSolution();

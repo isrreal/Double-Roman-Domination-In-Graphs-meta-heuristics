@@ -146,8 +146,6 @@ Chromosome GeneticAlgorithm::rouletteWheelSelection(std::vector<Chromosome> popu
     return population.back();
 }
 
-
-
 /**
  * @brief Selects and removes a chromosome based on a heuristic.
  * 
@@ -280,16 +278,18 @@ Chromosome GeneticAlgorithm::feasibilityCheck(Chromosome& chromosome) {
  */
 
 std::vector<Chromosome>& GeneticAlgorithm::createNewPopulation() {
-    this->population.clear();
+	std::vector<Chromosome> temp;
 
-    while (this->population.size() < populationSize) {
+    while (temp.size() < populationSize) {
         Chromosome selected1 = this->selectionMethod(tournamentSelection);
         Chromosome selected2 = this->selectionMethod(rouletteWheelSelection);
         Chromosome offspring = this->crossOver(selected1, selected2, nullptr);
 
-        this->population.push_back(offspring);
+        temp.push_back(offspring);
     }
-
+    
+	this->population.swap(temp);
+	
     return population;
 }
 

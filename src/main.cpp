@@ -8,7 +8,8 @@ int main(int argc, char** argv) {
     if (argc > 5) {
         Graph graph("graph.txt", false);
         // graph, populationSize, genesSize, generations, heuristic, numberOfAnts, iterations
-        DoubleRomanDomination* drd = new DoubleRomanDomination(graph, std::stoi(argv[1]), graph.getOrder(), std::stoi(argv[2]), std::stoi(argv[3]),
+        DoubleRomanDomination* drd = new DoubleRomanDomination(graph, std::stoi(argv[1]), graph.getOrder(), std::stoi(argv[2]),
+                std::stoi(argv[3]),
                 std::stoi(argv[4]), std::stoi(argv[5])); 
         std::cout << "Double Roman Domination Number computed by Genetic Algorithm: " << drd->getGamma2rGeneticAlgorithm() << std::endl;
         std::cout << "Double Roman Domination Number computed by ACO: " << drd->getGamma2rACO() << std::endl;

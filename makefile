@@ -3,7 +3,7 @@ IPATH=-Iinc/
 SRC=src/
 OBJ=obj/
 
-all: app
+all: create_obj_dir app
 
 app: main.gch GeneticAlgorithm.gch Chromosome.gch Graph.gch DoubleRomanDomination.gch AntColonyOptimization.gch
 	g++ $(OBJ)main.gch $(OBJ)GeneticAlgorithm.gch $(OBJ)Chromosome.gch $(OBJ)Graph.gch $(OBJ)DoubleRomanDomination.gch $(OBJ)AntColonyOptimization.gch	-o app
@@ -26,6 +26,8 @@ Chromosome.gch: $(SRC)Chromosome.cpp
 Graph.gch: $(SRC)Graph.cpp 
 	g++ $(CPPFLAGS) $(IPATH) -c $(SRC)Graph.cpp -o $(OBJ)Graph.gch
 	
+create_obj_dir: 
+	mkdir -p $(OBJ)
 clean:
 	rm -rf $(OBJ)*.gch
 

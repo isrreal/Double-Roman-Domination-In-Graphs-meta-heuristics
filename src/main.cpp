@@ -19,8 +19,7 @@ int main(int argc, char** argv) {
            std::cout << it << " ";
         std::cout << std::endl;
 
-        std::cout << "\nDouble Roman Domination Function: \n" << std::endl;
-        std::cout << "ACO solution: " << std::endl;
+        std::cout << "\nACO solution: " << std::endl;
         for (const auto& it: drd->getSolutionACO())
            std::cout << it << " ";
         std::cout << std::endl;

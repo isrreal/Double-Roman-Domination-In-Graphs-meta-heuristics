@@ -17,8 +17,6 @@ class GeneticAlgorithm {
 
 		void createPopulation(Chromosome(*heuristic)(Graph), Graph graph);
 		
-		Chromosome chooseBestSolution(const Chromosome& chromosome1, const Chromosome& chromosome2);
-		
 		Chromosome crossOver(Chromosome& chromosome1, Chromosome& cromossomo2,
                 	Chromosome(*crossOverHeuristic)(Chromosome&, Chromosome&)); 
                 
@@ -31,6 +29,8 @@ class GeneticAlgorithm {
         static Chromosome fitness(Chromosome& chromosome, Chromosome(*fitnessHeuristic)(Chromosome&));
 		static Chromosome tournamentSelection(std::vector<Chromosome> population);
 		static Chromosome rouletteWheelSelection(std::vector<Chromosome> population); 
+		static Chromosome chooseBestSolution(const Chromosome& chromosome1, const Chromosome& chromosome2);
+        static Chromosome chooseWorstSolution(const Chromosome& chromosome1, const Chromosome& chromosome2);
 		
 	public:
 		GeneticAlgorithm(Graph& graph, size_t populationSize, size_t genesSize, size_t generations):
@@ -38,7 +38,8 @@ class GeneticAlgorithm {
                         generations(generations), population(populationSize),
                         graph(graph) {}                 
 
-		~GeneticAlgorithm();
+		~GeneticAlgorithm() {}
+		
         Graph getGraph();
 		std::vector<Chromosome> getPopulation();     
 		size_t getPopulationSize();    

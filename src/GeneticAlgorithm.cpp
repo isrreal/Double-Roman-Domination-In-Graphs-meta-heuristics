@@ -1,7 +1,5 @@
 #include "GeneticAlgorithm.hpp"
  
-GeneticAlgorithm::~GeneticAlgorithm() {}
- 
  /**
  * @brief Retrieves the current population of chromosomes.
  * @return A vector of Chromosomes representing the current population.
@@ -90,28 +88,31 @@ Chromosome GeneticAlgorithm::fitness(Chromosome& chromosome, Chromosome(*fitness
 }
 
 /**
- * @brief Selects the best chromosome using tournament selection.
+ * @brief Selects the chromosome from the population using tournament selection.
  * 
- * Evaluates fitness of randomly chosen chromosomes and returns the one with the highest score.
+ * This method randomly selects two chromosomes from the population, evaluates their fitness, 
+ * and choses a random number r between 0 and 1. If r < k (where k is a parameters, for example 0.75),
+ * fitter of the two parameters is selected to be a parent; otherwise, the one with the higher fitness value is selected.
  * 
- * @param population The vector of chromosomes in the population.
- * @return The chromosome with the highest fitness value.
+ * @param population The vector of chromosomes in the current population.
+ * @return Chromosome The chromosome with the highest or lowest fitness value.
  */
 
 Chromosome GeneticAlgorithm::tournamentSelection(std::vector<Chromosome> population) { 
+    constexpr float parameter = 0.75f; 
     std::random_device randomNumber;
     std::mt19937 seed(randomNumber());
     std::uniform_int_distribution<int> gap(0, population.size() - 1);
-    Chromosome bestSolution = GeneticAlgorithm::fitness(population[gap(seed)], nullptr);
-    Chromosome temp;
+    std::uniform_real_distribution<float> probability(0, 1); 
     
-    for (size_t i = 0; i < population.size(); ++i) {
-        temp = GeneticAlgorithm::fitness(population[i], nullptr);
-        if (temp.fitnessValue > bestSolution.fitnessValue)
-            bestSolution = temp;
-    }
     
-    return bestSolution;
+    Chromosome c1 = GeneticAlgorithm::fitness(population[gap(seed)], nullptr);
+    Chromosome c2 = GeneticAlgorithm::fitness(population[gap(seed)], nullptr);
+   
+    if (probability(seed) < parameter) 
+       return GeneticAlgorithm::chooseBestSolution(c1, c2);
+    else 
+       return GeneticAlgorithm::chooseWorstSolution(c1, c2); 
 }
 
 /**
@@ -169,17 +170,28 @@ Chromosome GeneticAlgorithm::selectionMethod(Chromosome(*selectionHeuristic)(std
 
 
 /**
- * @brief Compares two chromosomes to choose the one with higher fitness.
+ * @brief Chooses the best Chromosome between two options based on their fitness values.
  * 
- * @param chromosome1 The first chromosome.
- * @param chromosome2 The second chromosome.
- * @return The chromosome with the higher fitness value.
+ * @param chromosome1 constant reference to the first Chromosome.
+ * @param chromosome2 constant reference  to the second Chromosome.
+ * @return Chromosome The Chromosome with the higher fitness value.
  */
 
 Chromosome GeneticAlgorithm::chooseBestSolution(const Chromosome& chromosome1, const Chromosome& chromosome2) {
 	    return (chromosome1.fitnessValue > chromosome2.fitnessValue ? chromosome1 : chromosome2);
 }
 
+/**
+ * @brief Chooses the worst Chromosome between two options based on their fitness values.
+ * 
+ * @param chromosome1 constant reference to the first Chromosome.
+ * @param chromosome2 constant reference to the second Chromosome.
+ * @return Chromosome The Chromosome with the lower fitness value.
+ */
+
+Chromosome GeneticAlgorithm::chooseWorstSolution(const Chromosome& chromosome1, const Chromosome& chromosome2) {
+	    return (chromosome1.fitnessValue < chromosome2.fitnessValue ? chromosome1 : chromosome2);
+}
 
 /**
  * @brief Performs crossover between two chromosomes.
@@ -239,8 +251,8 @@ Chromosome GeneticAlgorithm::crossOver(Chromosome& chromosome1, Chromosome& chro
  */
  
 Chromosome GeneticAlgorithm::feasibilityCheck(Chromosome& chromosome) {	
-    bool hasNeighborWith3 = false;                                                                                                                                                                             
-
+    bool hasNeighborWith3 = false;                     
+                                                                                                                                                            
     for (size_t i = 0; i < genesSize; ++i) {
         if (chromosome.genes[i] == 0) {
             hasNeighborWith3 = false;

@@ -8,9 +8,10 @@ void AntColonyOptimization::run() {
             solution = extendSolution(solution);
             solution = reduceSolution(solution);
             solution = RVNS(solution);
-         if (summation(solution) < summation(currentBestSolution))
+            
+         	if (summation(solution) < summation(currentBestSolution))
                 currentBestSolution = solution;
-      }    
+      	}    
                                                            
         if (summation(currentBestSolution) < summation(bestSolution))
               bestSolution = currentBestSolution;
@@ -21,10 +22,9 @@ void AntColonyOptimization::run() {
                                  
         if (convergenceFactor > 0.99)
             initializePheromones(graphPheromone);
-
+		
         --temp;
-    }
-    
+    }    
 }
 
 void AntColonyOptimization::initializePheromones(std::vector<float>& graphPheromone) {
@@ -46,7 +46,7 @@ std::vector<int> AntColonyOptimization::constructSolution(std::vector<int> solut
 
         temp.deleteAdjacencyList(vertex);
     }
-
+    
     return solution;
 }
 
@@ -99,7 +99,7 @@ std::vector<int> AntColonyOptimization::reduceSolution(std::vector<int> solution
        
         if (choosenVertex >= sortedVertices.size()) break;
 
-        if (solution[choosenVertex] == 3 || solution[choosenVertex] == 2) {
+        if (solution[sortedVertices[choosenVertex]] == 3 || solution[sortedVertices[choosenVertex]] == 2) {
             initLabel = solution[sortedVertices[choosenVertex]];
             solution[sortedVertices[choosenVertex]] = 0;
         
@@ -113,7 +113,7 @@ std::vector<int> AntColonyOptimization::reduceSolution(std::vector<int> solution
 
         temp.deleteAdjacencyList(sortedVertices[choosenVertex++]);
     }
-    
+  
     return solution;
 }
 
@@ -167,7 +167,6 @@ std::vector<int> AntColonyOptimization::RVNS(std::vector<int> solution) {
         --maxRVNSiterations;
     }
 
-
     return solution;
 }
 
@@ -191,7 +190,7 @@ size_t AntColonyOptimization::chooseVertex(Graph& temp) {
             if (temp.vertexExists(i)) { 
                 if (value < (temp.getVertexDegree(i) * graphPheromone[i])) {
                     value = temp.getVertexDegree(i) * graphPheromone[i];
-                	vertex = 																																																																											 i;                                                                                                                   
+                	vertex = i;                                                                                                                   
                 }
             }
         }
